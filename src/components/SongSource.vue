@@ -7,8 +7,8 @@
       <multi-input-lines
         :items="playlists"
         valuePropertyName="id"
-        :placeholder="'Playlist URL'"
-        :addButtonText="'Add Playlist'"
+        placeholder="Playlist URL"
+        addButtonText="Add Playlist"
         @add-item="addNewPlaylist"
         @remove-item="removePlaylist"
       ></multi-input-lines>
