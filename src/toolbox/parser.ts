@@ -13,6 +13,14 @@ import { ConditionExpression, NotExpression, AndExpression, OrExpression, Expres
 
 const ws = P.whitespace;
 
+const quoted = P.seq(P.string("\""), P.takeWhile(c => c != "\""), P.string("\"")).map(([, val,]) => val);
+const matchArtist = P.seq(P.string("artist"), P.optWhitespace, P.string("="), P.optWhitespace, quoted).map(([, ,,  , name]) => {
+    return {
+        type: "artist",
+        name
+    } as MatchArtistCondition;
+});
+
 type LanguageSpec = {
     attr: ConditionExpression,
     parens: Expression,
@@ -23,11 +31,7 @@ type LanguageSpec = {
 }
 
 const lang = P.createLanguage<LanguageSpec>({
-    attr: () => P.string("foo").map(x => {
-        return {
-
-        } as ConditionExpression;
-    }),
+    attr: () => matchArtist,
     parens: (r) => P.seq(P.string("("), r.expr, P.string(")")).map(([_1, expr, _2]) => expr),
     cond: (r) => P.alt(
         r.attr,
