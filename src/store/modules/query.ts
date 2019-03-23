@@ -1,6 +1,7 @@
 import { Module, ActionContext } from "vuex";
 import { RootState } from "..";
 
+import * as _ from "lodash";
 import { getField, updateField } from 'vuex-map-fields';
 
 export interface QueryState {
@@ -26,7 +27,7 @@ const state: QueryState = {
     settings: {
         source: {
             selected: "all",
-            playlists: [  { id: "" } ],
+            playlists: [{ id: "" }],
         },
         filter: {
             selected: "simple",
@@ -47,11 +48,19 @@ const getters = {
 };
 
 const actions = {
-    
+    addNewPlaylist({ commit, state }: ActionContext<QueryState, RootState>) {
+        commit("setPlaylists", [...state.settings.source.playlists, { id: "" }]);
+    },
+    removePlaylist({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
+        commit("setPlaylists", _.filter(state.settings.source.playlists, (x, i) => i != index));
+    },
 };
 
 const mutations = {
-    updateField
+    updateField,
+    setPlaylists(store: QueryState, playlists: { id: string }[]) {
+        store.settings.source.playlists = playlists;
+    }
 };
 
 export const query: Module<QueryState, RootState> = {
