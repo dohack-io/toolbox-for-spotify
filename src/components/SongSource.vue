@@ -16,21 +16,32 @@
 import Vue from "vue";
 import MultiInputLines from "@/components/MultiInputLines.vue";
 
+import { createHelpers } from 'vuex-map-fields';
+
+// `fooModule` is the name of the Vuex module.
+const { mapFields, mapMultiRowFields } = createHelpers({
+  getterType: 'query/getField',
+  mutationType: 'query/updateField',
+});
+
 export default Vue.extend({
   name: "song-source",
   components: { MultiInputLines },
   data() {
     return {
-      selected: "all",
+      // selected: "all",
       options: [
         { value: "all", text: "All Songs" },
         { value: "playlists", text: "Songs in Playlists" },
         { value: "user", text: "Your Library" }
-      ],
-      playlists: [{ value: "" }]
+      ]
     };
   },
-  methods: {}
+  methods: {},
+  computed: {
+    ...mapFields(["settings.source.selected"]),
+    ...mapMultiRowFields(["settings.source.playlists"]),
+  }
 });
 </script>
 
