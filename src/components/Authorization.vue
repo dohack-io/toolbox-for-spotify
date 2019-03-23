@@ -17,20 +17,20 @@ const authQuery = stringify({
   client_id: "58d754b89f7b4bd7bcb097ece2191923",
   scope: "user-read-private user-read-email",
   redirect_uri: "http://localhost:8080/auth/",
-  state: "blablafoo"
+  state: "blablafoo",
 });
 
 export default Vue.extend({
   name: "Authorization",
   data: () => ({
-    spotifyAuthUrl: authUrl + authQuery
+    spotifyAuthUrl: authUrl + authQuery,
   }),
   computed: {
     authDone(): boolean {
-      return this.$store.getters["auth/isAuthorized"]
+      return this.$store.getters["auth/isAuthenticated"];
     },
   },
-  props: {}
+  props: {},
 });
 </script>
 
