@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
+    "fix":"tslint --fix --project .",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
@@ -24,6 +25,7 @@
     "@vue/cli-service": "^3.5.0",
     "@vue/test-utils": "1.0.0-beta.29",
     "chai": "^4.1.2",
+    "tslint": "^5.14.0",
     "typescript": "^3.2.1",
     "vue-template-compiler": "^2.5.21"
   }
