@@ -24,29 +24,44 @@
         <div v-if="!complexFilter" class="row">
           <div class="col-4">
             <b-card title="Artist">
-              <b-card-text
-                >Some quick example text to build on the card title and make up
-                the bulk of the card's content.</b-card-text
-              >
-              <b-button href="#" variant="primary">Go somewhere</b-button>
+              <b-card-text>
+                <multi-input-lines
+                  :items="filters.artist"
+                  :valuePropertyName="'value'"
+                  :placeholder="'Name'"
+                  :addButtonText="'Add Artist'"
+                  @add-item="addNewArtistFilter"
+                  @remove-item="removeArtistFilter"
+                ></multi-input-lines>
+              </b-card-text>
             </b-card>
           </div>
           <div class="col-4">
             <b-card title="Genre">
-              <b-card-text
-                >Some quick example text to build on the card title and make up
-                the bulk of the card's content.</b-card-text
-              >
-              <b-button href="#" variant="primary">Go somewhere</b-button>
+              <b-card-text>
+                <multi-input-lines
+                  :items="filters.genre"
+                  :valuePropertyName="'value'"
+                  :placeholder="'Genre'"
+                  :addButtonText="'Add Genre'"
+                  @add-item="addNewGenreFilter"
+                  @remove-item="removeGenreFilter"
+                ></multi-input-lines>
+              </b-card-text>
             </b-card>
           </div>
           <div class="col-4">
             <b-card title="Release date">
-              <b-card-text
-                >Some quick example text to build on the card title and make up
-                the bulk of the card's content.</b-card-text
-              >
-              <b-button href="#" variant="primary">Go somewhere</b-button>
+              <b-card-text>
+                <multi-input-lines
+                  :items="filters.release"
+                  :valuePropertyName="'value'"
+                  :placeholder="'Year'"
+                  :addButtonText="'Add Year'"
+                  @add-item="addNewReleaseDateFilter"
+                  @remove-item="removeReleaseDateFilter"
+                ></multi-input-lines>
+              </b-card-text>
             </b-card>
           </div>
         </div>
@@ -91,11 +106,20 @@ export default Vue.extend({
     addNewArtistFilter() {
       this.filters.artist.push({ value: "" });
     },
+    removeArtistFilter(index: number) {
+      this.filters.artist.splice(index, 1);
+    },
     addNewGenreFilter() {
       this.filters.genre.push({ value: "" });
     },
+    removeGenreFilter(index: number) {
+      this.filters.genre.splice(index, 1);
+    },
     addNewReleaseDateFilter() {
       this.filters.release.push({ value: 2019 });
+    },
+    removeReleaseDateFilter(index: number) {
+      this.filters.release.splice(index, 1);
     }
   }
 });

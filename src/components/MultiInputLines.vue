@@ -1,14 +1,14 @@
 <template>
-  <div>
+  <div class="container p-0">
     <div v-for="(item, index) in items" :key="index" class="row mb-1">
-      <div class="col-11 pr-0">
+      <div class="col-9 col-md-11 pr-0">
         <b-form-input
           type="text"
-          v-model="item.value"
+          v-model="item[valuePropertyName]"
           :placeholder="placeholder"
         />
       </div>
-      <div class="col-1 pl-0">
+      <div class="col-3 col-md-1 pl-0">
         <b-button
           class="float-right"
           variant="danger"
@@ -19,14 +19,13 @@
       </div>
     </div>
     <div class="row mt-2">
-      <div class="col-9 pr-0"></div>
-      <div class="col-3 pl-0">
+      <div class="col">
         <b-button
           class="float-right error"
           variant="success"
           @click="addItem()"
         >
-          <i class="fas fa-plus-circle"></i> Add Playlist
+          <i class="fas fa-plus-circle"></i> {{ addButtonText }}
         </b-button>
       </div>
     </div>
@@ -41,14 +40,16 @@ export default Vue.extend({
   components: {},
   props: {
     placeholder: String,
-    items: Array
+    items: Array,
+    valuePropertyName: String,
+    addButtonText: String
   },
   methods: {
     addItem() {
-      this.$props.items.push({ value: "" });
+      this.$emit("add-item");
     },
     removeItem(index: number) {
-      this.$props.items.splice(index, 1);
+      this.$emit("remove-item", index);
     }
   }
 });

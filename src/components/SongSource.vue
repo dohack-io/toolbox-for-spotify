@@ -7,6 +7,7 @@
       <multi-input-lines
         :items="playlists"
         :placeholder="'Playlist URL'"
+        :addButtonText="'Add Playlist'"
       ></multi-input-lines>
     </div>
   </b-card>
