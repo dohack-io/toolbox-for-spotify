@@ -1,6 +1,6 @@
 <template>
   <b-navbar toggleable="lg" type="dark" variant="dark">
-    <b-navbar-brand href="#">Toolbox for Spotify</b-navbar-brand>
+    <b-navbar-brand href="/">Toolbox for Spotify</b-navbar-brand>
 
     <b-navbar-toggle target="nav_collapse" />
 

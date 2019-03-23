@@ -25,7 +25,7 @@ const mutations = {
     },
 };
 
-export const authentication: Module<AuthenticationState, RootState> = {
+export const auth: Module<AuthenticationState, RootState> = {
     namespaced: true,
     state,
     getters,
