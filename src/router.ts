@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Landing from "./views/Landing.vue";
+import Query from "./views/Query.vue";
 
 import store from "./store";
 
@@ -14,6 +15,12 @@ const router = new Router({
       path: "/",
       name: "landing",
       component: Landing,
+    },
+    {
+      path: "/query",
+      name: "query",
+      component: Query,
+      meta: { requiresAuth: true },
     },
     {
       path: "/about",
