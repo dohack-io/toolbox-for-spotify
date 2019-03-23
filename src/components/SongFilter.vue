@@ -50,7 +50,17 @@
             </b-card>
           </div>
         </div>
-        <div v-if="complexFilter">Complex</div>
+        <div v-if="complexFilter" class="row">
+          <div class="col">
+            <b-form-textarea
+              id="textarea-complex"
+              v-model="filters.complex"
+              placeholder="Enter query..."
+              rows="5"
+              style="font-family:monospace;"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -69,7 +79,8 @@ export default Vue.extend({
       filters: {
         artist: [{ value: "" }],
         genre: [{ value: "" }],
-        release: [{ value: 2019 }]
+        release: [{ value: 2019 }],
+        complex: ""
       }
     };
   },

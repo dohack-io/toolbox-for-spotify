@@ -21,9 +21,8 @@ export default Vue.extend({
   components: { MultiInputLines },
   data() {
     return {
-      selected: null,
+      selected: "all",
       options: [
-        { value: null, text: "Please select a source" },
         { value: "all", text: "All Songs" },
         { value: "playlists", text: "Songs in Playlists" },
         { value: "user", text: "Your Library" }
