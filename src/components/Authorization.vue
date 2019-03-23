@@ -1,9 +1,15 @@
 <template>
   <div class="authorization">
     <p>Click the button below to log in to your Spotify account, so that we can manage your music for you.</p>
-    <b-button :disabled="authDone" variant="primary" :href="this.spotifyAuthUrl">
-      <i class="fab fa-spotify"></i> Authenticate with Spotify
-    </b-button>
+    <div class="float-left">
+      <b-button :disabled="authDone" variant="primary" :href="this.spotifyAuthUrl">
+        <i class="fab fa-spotify"></i> Authenticate with Spotify
+      </b-button>
+      <template v-if="authDone">
+        <i class="fas fa-thumbs-up ml-3 mr-1"></i>
+        Successfully authenticated
+      </template>
+    </div>
   </div>
 </template>
 
@@ -28,9 +34,9 @@ export default Vue.extend({
   computed: {
     authDone(): boolean {
       return this.$store.getters["auth/isAuthenticated"];
-    },
+    }
   },
-  props: {},
+  props: {}
 });
 </script>
 
