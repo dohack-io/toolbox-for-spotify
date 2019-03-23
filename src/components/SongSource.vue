@@ -6,8 +6,11 @@
     <div class="container mt-3" v-if="selected == 'playlists'">
       <multi-input-lines
         :items="playlists"
+        :valuePropertyName="'value'"
         :placeholder="'Playlist URL'"
         :addButtonText="'Add Playlist'"
+        @add-item="addNewPlaylist"
+        @remove-item="removePlaylist"
       ></multi-input-lines>
     </div>
   </b-card>
@@ -31,7 +34,14 @@ export default Vue.extend({
       playlists: [{ value: "" }]
     };
   },
-  methods: {}
+  methods: {
+    addNewPlaylist() {
+      this.playlists.push({ value: "" });
+    },
+    removePlaylist(index: number) {
+      this.playlists.splice(index, 1);
+    }
+  }
 });
 </script>
 
