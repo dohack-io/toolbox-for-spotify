@@ -4,15 +4,27 @@
       <h1>Results</h1>
 
       <b-list-group>
+        <b-list-group-item>
+          <div class="row">
+            <div class="col-1 text-center p-0">
+              <b-form-checkbox v-model="allSongsSelected" @change="markAllSongs"></b-form-checkbox>
+            </div>
+            <div class="col-11 p-0">{{ selectedItemCount }} Songs selected</div>
+          </div>
+        </b-list-group-item>
+
         <b-list-group-item
           v-for="song in items.map(i => i.track)"
           v-bind:key="song.id"
         >
-          <div class="row">
-            <div class="col-1">
+          <div class="row align-items-center">
+            <div class="col-1 text-center p-0">
+              <b-form-checkbox v-model="song.selected"></b-form-checkbox>
+            </div>
+            <div class="col-1 p-0">
               <img :src="song | getCoverUrl" alt="" class="src" />
             </div>
-            <div class="col-11">
+            <div class="col-10 p-0">
               <h4>
                 {{ song.artists | concatFields("name") }} - {{ song.name }}
               </h4>
@@ -36,9 +48,12 @@ export default Vue.extend({
   components: {},
   data() {
     return {
+      selectedItemCount: 0,
+      allSongsSelected: false,
       items: [
         {
           track: {
+            selected: false,
             album: {
               images: [
                 {
@@ -73,10 +88,14 @@ export default Vue.extend({
           },
           video_thumbnail: { url: null }
         }
-      ],
+      ]
     };
   },
-  methods: {},
+  methods: {
+    markAllSongs(checked: boolean) {
+      this.items.forEach(i => (i.track.selected = checked));
+    }
+  },
   filters: {
     concatFields(artists: any[], fieldName: string) {
       return artists.map(a => a[fieldName] as string).join(", ");
@@ -91,6 +110,17 @@ export default Vue.extend({
       } else if ("images" in song.album) {
         return song.album.images[2].url;
       }
+    }
+  },
+  watch: {
+    items: {
+      handler(value) {
+        this.selectedItemCount = this.items.filter(
+          i => i.track.selected
+        ).length;
+        this.allSongsSelected = this.selectedItemCount === this.items.length;
+      },
+      deep: true
     }
   }
 });
