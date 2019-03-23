@@ -1,8 +1,15 @@
 import { Module, ActionContext } from "vuex";
 import { RootState } from "..";
+import spotify from "spotify-web-api-js";
 
 import * as _ from "lodash";
 import { getField, updateField } from "vuex-map-fields";
+import SpotifyWebApi from 'spotify-web-api-js';
+
+export interface ResultItem {
+    selected: boolean,
+    track: SpotifyApi.TrackObjectFull
+}
 
 export interface QueryState {
     settings: {
@@ -19,7 +26,7 @@ export interface QueryState {
         }
     };
     results: {
-        items: object[],
+        items: ResultItem[],
     };
 }
 
@@ -60,6 +67,9 @@ const mutations = {
     updateField,
     setPlaylists(store: QueryState, playlists: Array<{ id: string }>) {
         store.settings.source.playlists = playlists;
+    },
+    setResultItems(store: QueryState, items: ResultItem[]) {
+        store.results.items = items;
     }
 };
 
