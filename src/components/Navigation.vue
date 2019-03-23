@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="dark">
+  <b-navbar toggleable="md" type="dark" variant="dark">
     <b-navbar-brand href="/">Toolbox for Spotify</b-navbar-brand>
 
     <b-navbar-toggle target="nav_collapse"/>
@@ -7,7 +7,7 @@
     <b-collapse is-nav id="nav_collapse">
       <b-navbar-nav>
         <b-nav-item to="/">Home</b-nav-item>
-        <b-nav-item href="/query" disabled>Query</b-nav-item>
+        <b-nav-item to="/query">Query</b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
