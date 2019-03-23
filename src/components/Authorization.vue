@@ -1,8 +1,15 @@
 <template>
   <div class="authorization">
-    <p>Click the button below to log in to your Spotify account, so that we can manage your music for you.</p>
+    <p>
+      Click the button below to log in to your Spotify account, so that we can
+      manage your music for you.
+    </p>
     <div class="float-left">
-      <b-button :disabled="authDone" variant="primary" :href="this.spotifyAuthUrl">
+      <b-button
+        :disabled="authDone"
+        variant="primary"
+        :href="this.spotifyAuthUrl"
+      >
         <i class="fab fa-spotify"></i> Authenticate with Spotify
       </b-button>
       <template v-if="authDone">
@@ -23,13 +30,13 @@ const authQuery = stringify({
   client_id: "58d754b89f7b4bd7bcb097ece2191923",
   scope: "user-read-private user-read-email",
   redirect_uri: "http://localhost:8080/auth/",
-  state: "blablafoo",
+  state: "blablafoo"
 });
 
 export default Vue.extend({
   name: "Authorization",
   data: () => ({
-    spotifyAuthUrl: authUrl + authQuery,
+    spotifyAuthUrl: authUrl + authQuery
   }),
   computed: {
     authDone(): boolean {

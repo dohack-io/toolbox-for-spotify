@@ -1,7 +1,10 @@
 <template>
   <div class="landing">
-    <b-jumbotron header="Toolbox for Spotify" lead="Easy Song & Playlist Management">
-      <Authorization/>
+    <b-jumbotron
+      header="Toolbox for Spotify"
+      lead="Easy Song & Playlist Management"
+    >
+      <Authorization />
     </b-jumbotron>
   </div>
 </template>
@@ -13,7 +16,7 @@ import Authorization from "@/components/Authorization.vue"; // @ is an alias to 
 export default Vue.extend({
   name: "landing",
   components: {
-    Authorization,
-  },
+    Authorization
+  }
 });
 </script>

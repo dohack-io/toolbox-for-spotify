@@ -1,19 +1,36 @@
 <template>
-    <h1>Enter your query m8</h1>
+  <div>
+    <div class="page-header mt-3 ml-1">
+      <h1>Query</h1>
+    </div>
+    <b-row class="mt-3">
+      <b-col>
+        <song-source />
+      </b-col>
+    </b-row>
+    <b-row class="mt-3">
+      <b-col>
+        <song-filter />
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
-<script lnag="ts">
+<script lang="ts">
 import Vue from "vue";
-import Authorization from "@/components/Authorization.vue"; // @ is an alias to /src
+import SongSource from "@/components/SongSource.vue";
+import SongFilter from "@/components/SongFilter.vue";
+import MultiInputLines from "@/components/MultiInputLines.vue";
 
 export default Vue.extend({
-  name: "landing",
-  components: {
-    Authorization,
+  name: "query",
+  components: { MultiInputLines, SongFilter, SongSource },
+  data() {
+    return {};
   },
+  methods: {}
 });
 </script>
 
 <style>
-
 </style>
