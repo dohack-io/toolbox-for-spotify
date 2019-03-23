@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="page-header mt-3 ml-1">
+    <div class="page-header mt-3">
       <h1>Results</h1>
 
       <b-list-group>
