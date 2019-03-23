@@ -1,5 +1,5 @@
 import Spotify from "spotify-web-api-js";
-import SpotifyWebApi from 'spotify-web-api-js';
+import SpotifyWebApi from "spotify-web-api-js";
 import * as _ from "lodash";
 
 const spotitfy = new Spotify();
@@ -11,14 +11,14 @@ type QuerySource = {
     playlistIds: ReadonlyArray<string>
 } | {
     type: "user",
-}
+};
 
 
 
-type QueryFilter = MatchArtistCondition | MatchYearCondition
+type QueryFilter = MatchArtistCondition | MatchYearCondition;
 
-type QueryResult = {
-    foo: "test"
+interface QueryResult {
+    foo: "test";
 }
 
 export function loadTracksFromSource(accessCode: string, source: QuerySource, filterHint: QueryFilter): Promise<SpotifyApi.TrackObjectFull[]> {
@@ -31,11 +31,11 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
             let items: SpotifyApi.TrackObjectFull[] = [];
 
             function handler(err: SpotifyWebApi.ErrorObject, response: SpotifyApi.UsersSavedTracksResponse) {
-                console.log(response)
+                console.log(response);
                 if (err) {
                     reject(err);
                 } else {
-                    items = [...items, ...response.items.map(x => x.track)];
+                    items = [...items, ...response.items.map((x) => x.track)];
 
                     if (response.next !== null) {
                         spotify.getMySavedTracks({
@@ -54,7 +54,7 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
 
     // Playlists
     if (source.type === "playlists") {
-        const promises = source.playlistIds.map(playlistId => {
+        const promises = source.playlistIds.map((playlistId) => {
             return new Promise<SpotifyApi.TrackObjectFull[]>((resolve, reject) => {
                 let items: SpotifyApi.TrackObjectFull[] = [];
 
@@ -62,7 +62,7 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
                     if (err) {
                         reject(err);
                     } else {
-                        items = [...items, ...response.items.map(x => x.track)];
+                        items = [...items, ...response.items.map((x) => x.track)];
 
                         if (response.next !== null) {
                             spotify.getPlaylistTracks(playlistId, {
@@ -79,8 +79,8 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
             });
         });
 
-        return Promise.all(promises).then(results => {
-            return _.flatten(results)
+        return Promise.all(promises).then((results) => {
+            return _.flatten(results);
         });
     }
 

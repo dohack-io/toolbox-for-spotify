@@ -2,13 +2,13 @@ import { Module, ActionContext } from "vuex";
 import { RootState } from "..";
 
 import * as _ from "lodash";
-import { getField, updateField } from 'vuex-map-fields';
+import { getField, updateField } from "vuex-map-fields";
 
 export interface QueryState {
     settings: {
         source: {
             selected: "all" | "playlists" | "user",
-            playlists: { id: string }[],
+            playlists: Array<{ id: string }>,
         },
         filter: {
             selected: "simple" | "complex",
@@ -17,10 +17,10 @@ export interface QueryState {
                 expression: string
             }
         }
-    }
+    };
     results: {
         items: object[],
-    }
+    };
 }
 
 const state: QueryState = {
@@ -58,7 +58,7 @@ const actions = {
 
 const mutations = {
     updateField,
-    setPlaylists(store: QueryState, playlists: { id: string }[]) {
+    setPlaylists(store: QueryState, playlists: Array<{ id: string }>) {
         store.settings.source.playlists = playlists;
     }
 };
