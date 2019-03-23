@@ -1,10 +1,8 @@
 <template>
   <div class="landing">
     <b-jumbotron header="Toolbox for Spotify" lead="Easy Song & Playlist Management">
-      <p>Created at DO!HackJS 2019</p>
-      <b-button variant="primary" href="https://github.com/dohack-io/toolbox-for-spotify">Source</b-button>
+      <Authorization />
     </b-jumbotron>
-    <Authorization />
   </div>
 </template>
 

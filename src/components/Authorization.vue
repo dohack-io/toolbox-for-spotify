@@ -1,6 +1,7 @@
 <template>
   <div class="authorization">
-    Spotify Auth Button hier
+    <p>Click the button below to log in to your Spotify account, so that we can manage your music for you.</p>
+    <b-button variant="primary" href="#"><i class="fab fa-spotify"></i> Authenticate with Spotify</b-button>
   </div>
 </template>
 
