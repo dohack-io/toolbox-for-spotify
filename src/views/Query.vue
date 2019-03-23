@@ -1,36 +1,36 @@
 <template>
   <div>
-    <h1>Enter your query m8</h1>
-
-    <b-button @click="test()" variant="success">Always Pressed</b-button>
+    <div class="page-header mt-3 ml-1">
+      <h1>Query</h1>
+    </div>
+    <b-row class="mt-3">
+      <b-col>
+        <song-source />
+      </b-col>
+    </b-row>
+    <b-row class="mt-3">
+      <b-col>
+        <song-filter />
+      </b-col>
+    </b-row>
   </div>
 </template>
 
-<script lnag="ts">
+<script lang="ts">
 import Vue from "vue";
-import Authorization from "@/components/Authorization.vue"; // @ is an alias to /src
+import SongSource from "@/components/SongSource.vue";
+import SongFilter from "@/components/SongFilter.vue";
+import MultiInputLines from "@/components/MultiInputLines.vue";
 
 import * as query from "../toolbox/query";
 
 export default Vue.extend({
-  name: "landing",
-  components: {
-    Authorization
+  name: "query",
+  components: { MultiInputLines, SongFilter, SongSource },
+  data() {
+    return {};
   },
-  methods: {
-    test()  {
-      query.loadTracksFromSource(this.$store.state.auth.code, {
-        type:"playlists",
-        playlistIds: ["608oAZh9je5zA95dZAkpuO","37i9dQZF1DX4jP4eebSWR9"]
-      }, {})
-      .then(items => {
-        console.log(items);
-      })
-      .catch(err => {
-        console.log(err);
-      })
-    }
-  }
+  methods: {}
 });
 </script>
 

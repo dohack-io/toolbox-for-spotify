@@ -19,19 +19,13 @@ export default Vue.extend({
 <style scoped>
 /* Sticky footer styles
 -------------------------------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
-}
-body {
-  margin-bottom: 60px; /* Margin bottom by footer height */
-}
 .footer {
-  position: absolute;
-  bottom: 0;
+  position: relative;
+  height: 80px;
+  padding-top: 30px;
   width: 100%;
-  height: 60px; /* Set the fixed height of the footer here */
-  line-height: 60px; /* Vertically center the text there */
-  background-color: #f5f5f5;
+  background: #f5f5f5;
+  z-index: 10;
+  text-align: center;
 }
 </style>
