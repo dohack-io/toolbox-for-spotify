@@ -1,8 +1,10 @@
 <template>
   <div id="app">
-    <Navigation/>
-    <div class="container">
-      <router-view/>
+    <div id="content">
+      <Navigation/>
+      <div class="container">
+        <router-view/>
+      </div>
     </div>
     <Footer/>
   </div>
@@ -19,9 +21,25 @@ export default Vue.extend({
   components: {
     Navigation,
     Footer,
-  }
+  },
 });
 </script>
 
 <style>
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
+}
+
+#content {
+  position: relative;
+  min-height: calc(100% - 80px);
+  padding-bottom: 30px;
+  z-index: 20;
+  box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
+}
 </style>
