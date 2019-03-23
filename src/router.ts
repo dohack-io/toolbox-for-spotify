@@ -28,7 +28,9 @@ const router = new Router({
 
 // Process spotify redirect
 router.beforeEach((to, from, next) => {
-  if (to.fullPath === "/auth") {
+  console.log(to.fullPath);
+  console.log(to.path);
+  if (to.path.startsWith("/auth")) {
     const { code } = to.query;
 
     if (code !== undefined) {

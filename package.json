@@ -6,12 +6,13 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "fix":"tslint --fix --project .",
+    "fix": "tslint --fix --project .",
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.15",
+    "query-string": "^6.4.0",
     "vue": "^2.6.10",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1"
