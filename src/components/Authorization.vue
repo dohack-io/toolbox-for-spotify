@@ -19,9 +19,9 @@ import { stringify } from "query-string";
 
 const authUrl = "https://accounts.spotify.com/authorize?";
 const authQuery = stringify({
-  response_type: "code",
+  response_type: "token",
   client_id: "58d754b89f7b4bd7bcb097ece2191923",
-  scope: "user-read-private user-read-email",
+  scope: "user-read-private user-read-email user-library-read",
   redirect_uri: "http://localhost:8080/auth/",
   state: "blablafoo",
 });

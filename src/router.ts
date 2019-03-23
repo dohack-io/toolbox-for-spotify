@@ -33,13 +33,15 @@ const router = new Router({
   ],
 });
 
+const authTokenRegExp: RegExp = /#access_token=(.*)&token_type.*/;
+
 // Process spotify redirect
 router.beforeEach((to, from, next) => {
   if (to.path.startsWith("/auth")) {
-    const { code } = to.query;
+    const match = to.hash.match(authTokenRegExp);
 
-    if (code !== undefined) {
-      store.dispatch("auth/authenticate", code);
+    if (match !== null) {
+      store.dispatch("auth/authenticate", match[1]);
     }
 
     next("/");

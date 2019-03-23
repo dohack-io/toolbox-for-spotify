@@ -16,20 +16,18 @@ const state: QueryState = {
 };
 
 const getters = {
-    isAuthenticated: (state: QueryState) => state.code !== undefined,
+    
 };
 
 const actions = {
-    authenticate({ commit }: ActionContext<QueryState, RootState>, code: string) {
-        commit("setCode", code);
-    },
+    
 };
 
 const mutations = {
 
 };
 
-export const auth: Module<AuthenticationState, RootState> = {
+export const auth: Module<QueryState, RootState> = {
     namespaced: true,
     state,
     getters,
