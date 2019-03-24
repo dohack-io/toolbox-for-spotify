@@ -8,12 +8,13 @@
             class="float-right mt-3"
             variant="success"
             @click="executeQuery()"
+            :disabled="!canExecuteQuery"
           >
             Show Results
-            <i class="fas fa-arrow-alt-circle-right ml-2"></i>
+            <i class="fas ml-2" 
+            :class="executeQueryButtonClass"></i>
           </b-button>
         </div>
-        Exevuting: {{ executing }} Error: {{ error }}
       </div>
     </template>
     <template v-if="display == 'results'">
@@ -54,7 +55,14 @@ export default Vue.extend({
   },
   computed: {
     ...mapFields(["display", "executing", "error"]),
-    ...mapGetters("query", ["canExecuteQuery"])
+    ...mapGetters("query", ["canExecuteQuery"]),
+    executeQueryButtonClass() {
+      return {
+        "fa-arrow-alt-circle-right": !this.executing,
+        "fa-spin": this.executing,
+        "fa-spinner": this.executing,
+      }
+    }
   },
   methods: {
     ...mapActions("query", ["executeQuery"])

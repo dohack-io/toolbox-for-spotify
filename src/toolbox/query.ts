@@ -13,8 +13,6 @@ export type QuerySource = {
     type: "user",
 };
 
-
-
 export type QueryFilter = MatchArtistCondition | MatchYearCondition;
 
 interface QueryResult {
