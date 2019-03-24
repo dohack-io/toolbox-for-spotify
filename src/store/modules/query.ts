@@ -118,8 +118,8 @@ const getters = {
   canExecuteQuery: (state: QueryState, getters: { filterExpression: FilterExpressionState }) => {
     return getters.filterExpression.status != "error" && !state.executing;
   },
-  canSaveResults: (state: QueryState) => {
-    return state.results.items.length > 0;
+  canSaveResults: (state: QueryState, getters: { selectedSongs: number }) => {
+    return state.results.items.length > 0 && getters.selectedSongs > 0;
   },
   selectedSongs: (state: QueryState) => {
     return state.results.items.filter(s => s.selected).length;
