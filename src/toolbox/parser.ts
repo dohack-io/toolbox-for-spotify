@@ -1,4 +1,5 @@
 import * as P from "parsimmon";
+import * as condition from "./condition";
 
 // simpleCond := x | (expr)
 // cond := simpleCond | "NOT" simpleCond
@@ -13,13 +14,21 @@ import { ConditionExpression, NotExpression, AndExpression, OrExpression, Expres
 
 const ws = P.whitespace;
 
-const quoted = P.seq(P.string("\""), P.takeWhile((c) => c != "\""), P.string("\"")).map(([, val, ]) => val);
-const matchArtist = P.seq(P.string("artist"), P.optWhitespace, P.string("="), P.optWhitespace, quoted).map(([, , ,  , name]) => {
-    return {
-        type: "artist",
-        name
-    } as MatchArtistCondition;
-});
+const quotedString = P.seq(P.string("\""), P.takeWhile((c) => c != "\""), P.string("\"")).map(([, val,]) => val);
+const ops = {
+    equals: P.string("="),
+}
+
+function makeBinOp<T>(field: P.Parser<any>, op: P.Parser<any>, value: P.Parser<T>, producer: (value: T) => ConditionExpression) {
+    return P.seq(field, P.optWhitespace, op, P.optWhitespace, value)
+        .map(([, , , , v]) => {
+            return producer(v);
+        });
+}
+
+const conditions = [
+    makeBinOp(P.string("artist"), ops.equals, quotedString, condition.matchArtist),
+];
 
 interface LanguageSpec {
     attr: ConditionExpression;
@@ -31,7 +40,7 @@ interface LanguageSpec {
 }
 
 const lang = P.createLanguage<LanguageSpec>({
-    attr: () => matchArtist,
+    attr: () => P.alt(...conditions),
     parens: (r) => P.seq(P.string("("), r.expr, P.string(")")).map(([_1, expr, _2]) => expr),
     cond: (r) => P.alt(
         r.attr,

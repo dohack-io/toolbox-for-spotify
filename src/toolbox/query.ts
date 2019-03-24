@@ -2,6 +2,8 @@ import Spotify from "spotify-web-api-js";
 import SpotifyWebApi from "spotify-web-api-js";
 import * as _ from "lodash";
 
+import { Expression } from "./filter"
+
 const spotitfy = new Spotify();
 
 export type QuerySource = {
@@ -11,15 +13,13 @@ export type QuerySource = {
     playlistIds: ReadonlyArray<string>
 } | {
     type: "user",
-};
-
-export type QueryFilter = MatchArtistCondition | MatchYearCondition;
+}
 
 interface QueryResult {
     foo: "test";
 }
 
-export function loadTracksFromSource(accessCode: string, source: QuerySource, filterHint: QueryFilter|undefined): Promise<SpotifyApi.TrackObjectFull[]> {
+export function loadTracksFromSource(accessCode: string, source: QuerySource, filterHint: Expression|undefined): Promise<SpotifyApi.TrackObjectFull[]> {
     const spotify = new SpotifyWebApi();
     spotify.setAccessToken(accessCode);
 

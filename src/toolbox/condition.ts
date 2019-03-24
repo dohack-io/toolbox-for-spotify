@@ -1,15 +1,32 @@
-interface Condition {
-    type: string;
-    apply: (track: SpotifyApi.TrackObjectFull) => boolean;
+import * as _ from "lodash";
+
+export interface Condition {
+    type: "condition";
+    test: (track: SpotifyApi.TrackObjectFull) => boolean;
 }
 
-interface MatchArtistCondition extends Condition {
-    type: "artist";
-    name: string;
+export interface MatchArtistCondition extends Condition {
+    type: "condition";
+    attribute: "artist";
+    artist: string;
 }
 
-interface MatchYearCondition extends Condition {
-    type: "year";
+export interface MatchYearCondition extends Condition {
+    type: "condition";
+    attribute: "year"
     year: Number;
+}
+
+export function matchArtist(artist: string): MatchArtistCondition {
+    const normalized = artist.toLocaleLowerCase();
+
+    return {
+        type: "condition",
+        attribute: "artist",
+        artist: normalized,
+        test(track: SpotifyApi.TrackObjectFull ) {
+            return track.artists.map(a => a.name.toLocaleLowerCase()).filter(a => a.toLocaleLowerCase().includes(normalized)).length > 0;
+        }
+    }
 }
 

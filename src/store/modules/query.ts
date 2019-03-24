@@ -4,10 +4,10 @@ import spotify from "spotify-web-api-js";
 
 import * as _ from "lodash";
 import { getField, updateField } from "vuex-map-fields";
-import { Expression } from '@/toolbox/filter';
 import { parseExpression } from "../../toolbox/parser"
 
 import { loadTracksFromSource, QuerySource } from "../../toolbox/query"
+import { filterTracks, Expression } from "../../toolbox/filter";
 
 export interface ResultItem {
     selected: boolean,
@@ -115,7 +115,7 @@ const actions = {
     removeReleaseDate({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
         commit("setReleaseDates", _.filter(state.settings.filter.simple.releaseDates, (x, i) => i !== index));
     },
-    executeQuery({ commit, state, rootState }: ActionContext<QueryState, any>, ) {
+    executeQuery({ commit, state, getters, rootState }: ActionContext<QueryState, any>, ) {
         if (state.executing) {
             return;
         }
@@ -123,6 +123,7 @@ const actions = {
         commit("startQueryExecution");
         const authCode = rootState.auth.code;
         let source: QuerySource;
+        const filter: Expression = getters.filterExpression;
 
         if (state.settings.source.selected == "all") {
             source = { type: "all" };
@@ -135,16 +136,20 @@ const actions = {
             };
         }
 
-        loadTracksFromSource(authCode, source, undefined).then(results => {
-            return new Promise(resolve => setTimeout(() => {
-                commit("setQueryResults", results);
-                resolve();
-            }, 1000));
-        }).catch((err: any) => {
-            commit("setQueryError", err.message);
-        }).finally(() => {
-            commit("finishQueryExecution");
-        });
+        loadTracksFromSource(authCode, source, undefined)
+            .then(results => {
+                return filterTracks(results, filter);
+            }).then((results) => {
+                return new Promise(resolve => setTimeout(() => {
+                    commit("setQueryResults", results);
+                    resolve();
+                }, 1000));
+            })
+            .catch((err: any) => {
+                commit("setQueryError", err.message);
+            }).finally(() => {
+                commit("finishQueryExecution");
+            });
     },
     markAllResultItems({ commit, state, }: ActionContext<QueryState, RootState>, checked: boolean) {
         commit("setResultItems", _.map(state.results.items, ({ track }) => ({ selected: checked, track })));
