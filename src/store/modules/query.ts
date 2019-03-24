@@ -8,6 +8,8 @@ import { parseExpression } from "../../toolbox/parser"
 
 import { loadTracksFromSource, QuerySource } from "../../toolbox/query"
 import { filterTracks, Expression } from "../../toolbox/filter";
+import { getAvailablePlaylists, createPlaylist, appendTracks, replaceTracks } from '@/toolbox/save';
+import { auth } from './auth';
 
 export interface ResultItem {
     selected: boolean,
@@ -15,7 +17,7 @@ export interface ResultItem {
 }
 
 export interface QueryState {
-    display: "settings" | "results",
+    display: "settings" | "results" | "save",
     settings: {
         source: {
             selected: "all" | "playlists" | "user",
@@ -40,7 +42,8 @@ export interface QueryState {
     };
     sink: {
         new: {
-            name: string
+            name: string,
+            publicPlaylist: boolean,
         }
         existing: {
             mode: "append" | "replace",
@@ -79,6 +82,7 @@ const state: QueryState = {
     sink: {
         new: {
             name: "",
+            publicPlaylist: false,
         },
         existing: {
             mode: "append",
@@ -151,7 +155,7 @@ const actions = {
             return;
         }
 
-        commit("startQueryExecution");
+        commit("startExecution");
         const authCode = rootState.auth.code;
         let source: QuerySource;
 
@@ -181,13 +185,79 @@ const actions = {
                 }, 1000));
             })
             .catch((err: any) => {
-                commit("setQueryError", err.message);
+                commit("setExecutionError", err.message);
             }).finally(() => {
-                commit("finishQueryExecution");
+                commit("finishExecution");
             });
     },
     markAllResultItems({ commit, state, }: ActionContext<QueryState, RootState>, checked: boolean) {
         commit("setResultItems", _.map(state.results.items, ({ track }) => ({ selected: checked, track })));
+    },
+    executeSelectResults({ commit, state, rootState }: ActionContext<QueryState, any>) {
+        if (state.executing) {
+            return;
+        }
+
+        commit("startExecution");
+        const authCode = rootState.auth.code;
+
+        getAvailablePlaylists(authCode)
+            .then((results) => {
+                return new Promise(resolve => setTimeout(() => {
+                    commit("setAvailablePlaylists", results);
+                    commit("setDisplay", "save");
+                    resolve();
+                }, 1000));
+            })
+            .catch((err: any) => {
+                commit("setExecutionError", err.message);
+            }).finally(() => {
+                commit("finishExecution");
+            });
+    },
+    executeSaveToNewPlaylist({ commit, state, rootState }: ActionContext<QueryState, any>) {
+        if (state.executing) {
+            return;
+        }
+
+        commit("startExecution");
+        const authCode = rootState.auth.code;
+        const {name, publicPlaylist } = state.sink.new;
+        const tracks = state.results.items.map(i => i.track);
+
+        return createPlaylist(authCode, name, publicPlaylist)
+            .then((playlist) => {
+                return appendTracks(authCode, playlist.id, tracks);
+            })
+            .catch((err: any) => {
+                commit("setExecutionError", err.message);
+            }).finally(() => {
+                commit("finishExecution");
+            });
+    },
+    executeSaveToExistingPlaylist({ commit, state, rootState }: ActionContext<QueryState, any>) {
+        if (state.executing || state.sink.existing.selectedId === undefined) {
+            return;
+        }
+
+        commit("startExecution");
+        const authCode = rootState.auth.code;
+        const tracks = state.results.items.map(i => i.track);
+        const playlistId = state.sink.existing.selectedId;
+
+        let promise;
+        if (state.sink.existing.mode === "append") {
+            promise = appendTracks(authCode, playlistId, tracks);
+        } else {
+            promise = replaceTracks(authCode, playlistId, tracks);
+        }
+
+        promise
+            .catch((err: any) => {
+                commit("setExecutionError", err.message);
+            }).finally(() => {
+                commit("finishExecution");
+            });
     },
 };
 
@@ -208,14 +278,14 @@ const mutations = {
     setResultItems(store: QueryState, items: ResultItem[]) {
         store.results.items = items;
     },
-    startQueryExecution(store: QueryState) {
+    startExecution(store: QueryState) {
         store.executing = true;
         store.error = undefined;
     },
-    finishQueryExecution(store: QueryState) {
+    finishExecution(store: QueryState) {
         store.executing = false;
     },
-    setQueryError(store: QueryState, error: string) {
+    setExecutionError(store: QueryState, error: string) {
         store.error = error;
     },
     setQueryResults(store: QueryState, results: SpotifyApi.TrackObjectFull[]) {
@@ -226,6 +296,12 @@ const mutations = {
             };
         });
         store.display = "results";
+    },
+    setAvailablePlaylists(store: QueryState, results: SpotifyApi.PlaylistObjectSimplified[]) {
+        store.sink.existing.availablePlaylist = results;
+    },
+    setDisplay(store: QueryState, display: "settings" | "results" | "save") {
+        store.display = display;
     }
 };
 
