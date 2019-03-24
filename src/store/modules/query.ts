@@ -38,6 +38,16 @@ export interface QueryState {
     results: {
         items: ResultItem[],
     };
+    sink: {
+        new: {
+            name: string
+        }
+        existing: {
+            mode: "append" | "replace",
+            availablePlaylist: SpotifyApi.PlaylistObjectSimplified[],
+            selectedId: string | undefined,
+        },
+    }
 }
 
 type FilterExpressionState = { status: "empty" } | { status: "success", expr: Expression } | { status: "error", message: string };
@@ -60,12 +70,21 @@ const state: QueryState = {
                 expression: ""
             }
         }
-
     },
     executing: false,
     error: undefined,
     results: {
         items: []
+    },
+    sink: {
+        new: {
+            name: "",
+        },
+        existing: {
+            mode: "append",
+            availablePlaylist: [],
+            selectedId: undefined,
+        },
     }
 };
 
