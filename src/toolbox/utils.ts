@@ -8,7 +8,7 @@ export function getAllPages<T>(worker: (offset: number, limit: number, callback:
             } else {
                 items = [...items, ...result.items];
 
-                if (result.next !== undefined) {
+                if (result.next != null) {
                     worker(result.offset + result.limit, result.limit, handler);
                 } else {
                     resolve(items);
