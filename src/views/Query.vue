@@ -1,23 +1,24 @@
 <template>
   <div>
-    <template v-if="!resultPage">
+    <template v-if="display == 'settings'">
       <query-settings />
       <div class="row">
         <div class="col">
           <b-button
             class="float-right mt-3"
             variant="info"
-            @click="switchResultPage()"
+            disabled="!canExecuteQuery"
+            @click="display = 'results'"
             >Show Results <i class="fas fa-arrow-alt-circle-right ml-2"></i
           ></b-button>
         </div>
       </div>
     </template>
-    <template v-if="resultPage">
+    <template v-if="display == 'results'">
       <query-results />
       <div class="row">
         <div class="col">
-          <b-button class="mt-3" variant="info" @click="switchResultPage()"
+          <b-button class="mt-3" variant="info" @click="display = 'settings'"
             ><i class="fas fa-arrow-alt-circle-left mr-2"></i> Edit
             Query</b-button
           >
@@ -34,6 +35,14 @@ import QueryResults from "@/components/QueryResults.vue";
 
 import * as query from "../toolbox/query";
 
+import { createHelpers } from "vuex-map-fields";
+import { mapGetters } from "vuex";
+
+const { mapFields, mapMultiRowFields } = createHelpers({
+  getterType: "query/getField",
+  mutationType: "query/updateField"
+});
+
 export default Vue.extend({
   name: "query",
   components: { QuerySettings, QueryResults },
@@ -42,10 +51,9 @@ export default Vue.extend({
       resultPage: false
     };
   },
-  methods: {
-    switchResultPage() {
-      this.resultPage = !this.resultPage;
-    }
+  computed: {
+    ...mapFields(["display"]),
+    ...mapGetters("query", ["canExecuteQuery"])
   }
 });
 </script>

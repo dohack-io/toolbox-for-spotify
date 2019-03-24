@@ -5,6 +5,8 @@ import spotify from "spotify-web-api-js";
 import * as _ from "lodash";
 import { getField, updateField } from "vuex-map-fields";
 import SpotifyWebApi from 'spotify-web-api-js';
+import { Expression } from '@/toolbox/filter';
+import { parseExpression} from "../../toolbox/parser"
 
 export interface ResultItem {
     selected: boolean,
@@ -12,6 +14,7 @@ export interface ResultItem {
 }
 
 export interface QueryState {
+    display: "settings"|"results",
     settings: {
         source: {
             selected: "all" | "playlists" | "user",
@@ -31,6 +34,7 @@ export interface QueryState {
 }
 
 const state: QueryState = {
+    display: "settings",
     settings: {
         source: {
             selected: "all",
@@ -51,7 +55,24 @@ const state: QueryState = {
 };
 
 const getters = {
-    getField
+    getField,
+    filterExpression: (state: QueryState) => {
+        if (state.settings.filter.selected == "simple") {
+            return undefined;
+        } else {
+            const parseResult = parseExpression(state.settings.filter.complex.expression);
+
+            if (parseResult.status) {
+                return parseResult.value;
+            }
+
+            return undefined;
+        }
+    },
+    canExecuteQuery: (state: QueryState, getters: { filterExpression: Expression|undefined }) => {
+        return getters.filterExpression !== undefined;
+    },
+
 };
 
 const actions = {

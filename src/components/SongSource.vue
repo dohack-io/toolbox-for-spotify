@@ -42,7 +42,7 @@ export default Vue.extend({
   },
   computed: {
     ...mapFields(["settings.source.selected"]),
-    ...mapMultiRowFields(["settings.source.playlists"])
+    ...mapMultiRowFields(["settings.source.playlists"]),
   },
   methods: {
     ...mapActions("query", ["addNewPlaylist", "removePlaylist"])
