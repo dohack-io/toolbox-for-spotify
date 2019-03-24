@@ -87,15 +87,25 @@
         </div>
 
         <!-- complex query -->
-        <div v-if="selected === 'complex'" class="row">
-          <div class="col">
-            <b-form-textarea
-              id="textarea-complex"
-              v-model="expression"
-              placeholder="Enter filter..."
-              rows="5"
-              style="font-family:monospace;"
-            />
+        <div v-if="selected === 'complex'">
+          <div class="row">
+            <div class="col">
+              <b-form-textarea
+                id="textarea-complex"
+                v-model="expression"
+                placeholder="Enter filter..."
+                rows="5"
+                style="font-family:monospace;"
+              />
+            </div>
+          </div>
+          <div v-if="filterExpression === undefined" class="row">
+            <div class="col">
+              <b-alert variant="danger" show class="mt-3">
+                Error parsing the filter expression!
+                <i class="far fa-sad-tear"></i>
+              </b-alert>
+            </div>
           </div>
         </div>
       </div>
@@ -108,7 +118,7 @@ import Vue from "vue";
 import MultiInputLines from "@/components/MultiInputLines.vue";
 
 import { createHelpers } from "vuex-map-fields";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 const { mapFields, mapMultiRowFields } = createHelpers({
   getterType: "query/getField",
@@ -122,6 +132,7 @@ export default Vue.extend({
     return {};
   },
   computed: {
+    ...mapGetters("query", ["filterExpression"]),
     ...mapFields([
       "settings.filter.selected",
       "settings.filter.complex.expression"
