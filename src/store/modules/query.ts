@@ -35,7 +35,7 @@ export interface QueryState {
             }
         }
     };
-    executing: boolean,
+    executing: undefined | "query" | "select"| "library"| "newPlaylist"| "existingPlaylist",
     error: string | undefined,
     results: {
         items: ResultItem[],
@@ -74,7 +74,7 @@ const state: QueryState = {
             }
         }
     },
-    executing: false,
+    executing: undefined,
     error: undefined,
     results: {
         items: []
@@ -167,7 +167,7 @@ const actions = {
             return;
         }
 
-        commit("startExecution");
+        commit("startExecution", "query");
         const authCode = rootState.auth.code;
         let source: QuerySource;
 
@@ -209,7 +209,7 @@ const actions = {
             return;
         }
 
-        commit("startExecution");
+        commit("startExecution", "select");
         const authCode = rootState.auth.code;
 
         getAvailablePlaylists(authCode)
@@ -231,7 +231,7 @@ const actions = {
             return;
         }
 
-        commit("startExecution");
+        commit("startExecution", "newPlaylist");
         const authCode = rootState.auth.code;
         const { name, publicPlaylist } = state.sink.new;
         const tracks = state.results.items.map(i => i.track);
@@ -251,7 +251,7 @@ const actions = {
             return;
         }
 
-        commit("startExecution");
+        commit("startExecution", "existingPlaylist");
         const authCode = rootState.auth.code;
         const tracks = state.results.items.map(i => i.track);
         const playlistId = state.sink.existing.selectedId;
@@ -275,7 +275,7 @@ const actions = {
             return;
         }
 
-        commit("startExecution");
+        commit("startExecution", "library");
         const authCode = rootState.auth.code;
         const tracks = state.results.items.map(i => i.track);
 
@@ -305,12 +305,12 @@ const mutations = {
     setResultItems(store: QueryState, items: ResultItem[]) {
         store.results.items = items;
     },
-    startExecution(store: QueryState) {
-        store.executing = true;
+    startExecution(store: QueryState, executing: "query" | "select"| "library"| "newPlaylist"| "existingPlaylist") {
+        store.executing = executing;
         store.error = undefined;
     },
     finishExecution(store: QueryState) {
-        store.executing = false;
+        store.executing = undefined;
     },
     setExecutionError(store: QueryState, error: string) {
         store.error = error;
