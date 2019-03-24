@@ -53,7 +53,7 @@ export function matchSongTitle(title: string): MatchTrackTitleCondition {
     attribute: "title",
     title: normalized,
     test(track: SpotifyApi.TrackObjectFull) {
-      return track.name.toLocaleLowerCase() === normalized;
+      return track.name.toLocaleLowerCase().includes(normalized);
     }
   }
 }
@@ -66,7 +66,7 @@ export function matchAlbumTitle(title: string): MatchAlbumTitleCondition {
     attribute: "title",
     title: normalized,
     test(track: SpotifyApi.TrackObjectFull) {
-      return track.album.name.toLocaleLowerCase() === normalized;
+      return track.album.name.toLocaleLowerCase().includes(normalized);
     }
   }
 }
