@@ -16,7 +16,7 @@ const ws = P.whitespace;
 
 const vals = {
   str: P.seq(P.string("\""), P.takeWhile((c) => c != "\""), P.string("\"")).map(([, val,]) => val),
-  num: P.regexp(/[0-9]+/).map((str) => parseInt(str, 10))
+  num: P.regexp(/[0-9]+/).map((str) => parseInt(str, 10)).desc("integer")
 }
 const ops = {
   eq: P.string("="),

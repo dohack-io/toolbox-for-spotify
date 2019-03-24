@@ -30,8 +30,7 @@ export interface QueryState {
             },
             complex: {
                 expression: string
-            },
-            
+            }
         }
     };
     executing: boolean,
@@ -40,6 +39,8 @@ export interface QueryState {
         items: ResultItem[],
     };
 }
+
+type FilterExpressionState = { status: "empty" } | { status: "success", expr: Expression } | { status: "error", message: string };
 
 const state: QueryState = {
     display: "settings",
@@ -70,21 +71,29 @@ const state: QueryState = {
 
 const getters = {
     getField,
-    filterExpression: (state: QueryState) => {
+    filterExpression(state: QueryState): FilterExpressionState {
         if (state.settings.filter.selected == "simple") {
-            return undefined;
+            return { status: "empty" };
         } else {
-            const parseResult = parseExpression(state.settings.filter.complex.expression);
+            const input = state.settings.filter.complex.expression;
 
-            if (parseResult.status) {
-                return parseResult.value;
+            if (/^\s*$/.test(input)) {
+                return { status: "empty" };
             }
 
-            return undefined;
+            const parseResult = parseExpression(input);
+
+            if (parseResult.status) {
+                return { status: "success", expr: parseResult.value };
+            }
+
+            return {
+                status: "error", message: `Expected ${parseResult.expected.join(" or ")} at line ${parseResult.index.line}, column ${parseResult.index.column}`
+            }
         }
     },
-    canExecuteQuery: (state: QueryState, getters: { filterExpression: Expression | undefined }) => {
-        return /* getters.filterExpression !== undefined && */ !state.executing;
+    canExecuteQuery: (state: QueryState, getters: { filterExpression: FilterExpressionState }) => {
+        return getters.filterExpression.status != "error" && !state.executing;
     },
     selectedSongs: (state: QueryState) => {
         return state.results.items.filter(s => s.selected).length;
@@ -117,14 +126,16 @@ const actions = {
         commit("setReleaseDates", _.filter(state.settings.filter.simple.releaseDates, (x, i) => i !== index));
     },
     executeQuery({ commit, state, getters, rootState }: ActionContext<QueryState, any>, ) {
-        if (state.executing) {
+        const filter: FilterExpressionState = getters.filterExpression;
+
+        if (state.executing || filter.status == "error") {
             return;
         }
 
         commit("startQueryExecution");
         const authCode = rootState.auth.code;
         let source: QuerySource;
-        const filter: Expression = getters.filterExpression;
+
 
         if (state.settings.source.selected == "all") {
             source = { type: "all" };
@@ -139,7 +150,11 @@ const actions = {
 
         loadTracksFromSource(authCode, source, undefined)
             .then(results => {
-                return filterTracks(results, filter);
+                if (filter.status == "success") {
+                    return filterTracks(results, filter.expr);
+                } else {
+                    return results;
+                }
             }).then((results) => {
                 return new Promise(resolve => setTimeout(() => {
                     commit("setQueryResults", results);

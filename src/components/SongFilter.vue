@@ -99,10 +99,10 @@
               />
             </div>
           </div>
-          <div v-if="filterExpression === undefined" class="row">
+          <div v-if="filterExpression.status === 'error'" class="row">
             <div class="col">
               <b-alert variant="danger" show class="mt-3">
-                Error parsing the filter expression!
+                Error parsing the filter expression: {{ filterExpression.message }}
                 <i class="far fa-sad-tear"></i>
               </b-alert>
             </div>
