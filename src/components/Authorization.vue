@@ -24,11 +24,20 @@
 import Vue from "vue";
 import { stringify } from "query-string";
 
+const scopes = [
+  "user-library-modify",
+  "user-library-read",
+  "playlist-read-private",
+  "playlist-modify-public",
+  "playlist-modify-private",
+  "playlist-modify-private",
+];
+
 const authUrl = "https://accounts.spotify.com/authorize?";
 const authQuery = stringify({
   response_type: "token",
   client_id: "58d754b89f7b4bd7bcb097ece2191923",
-  scope: "user-read-private user-read-email user-library-read",
+  scope: scopes.join(" "),
   redirect_uri: "http://localhost:8080/auth/",
   state: "blablafoo"
 });
