@@ -90,7 +90,6 @@ const actions = {
 };
 
 const mutations = {
-<<<<<<< HEAD
   updateField,
   setPlaylists(store: QueryState, playlists: Array<{ id: string }>) {
     store.settings.source.playlists = playlists;
@@ -103,16 +102,10 @@ const mutations = {
   },
   setReleaseDates(store: QueryState, releaseDates: Array<{ year: number }>) {
     store.settings.filter.simple.releaseDates = releaseDates;
+  },
+  setResultItems(store: QueryState, items: ResultItem[]) {
+    store.results.items = items;
   }
-=======
-    updateField,
-    setPlaylists(store: QueryState, playlists: Array<{ id: string }>) {
-        store.settings.source.playlists = playlists;
-    },
-    setResultItems(store: QueryState, items: ResultItem[]) {
-        store.results.items = items;
-    }
->>>>>>> 02abac12fe58329ca843083d0783d0b47afaddb0
 };
 
 export const query: Module<QueryState, RootState> = {
