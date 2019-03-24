@@ -52,3 +52,16 @@ export function replaceTracks(token: string, playlistId: string, tracks: Spotify
 
     return Promise.all(promises);
 }
+
+export function saveToLibrary(token: string, tracks: SpotifyApi.TrackObjectSimplified[]): Promise<any> {
+    const spotify = new Spotify();
+    spotify.setAccessToken(token);
+
+    const chunks = _.chunk(tracks, 50);
+    const promises = chunks.map(chunk => {
+        const ids = chunk.map(i => i.id);
+        return spotify.addToMySavedTracks(ids);
+    });
+
+    return Promise.all(promises);
+}

@@ -8,7 +8,7 @@ import { parseExpression } from "../../toolbox/parser"
 
 import { loadTracksFromSource, QuerySource } from "../../toolbox/query"
 import { filterTracks, Expression } from "../../toolbox/filter";
-import { getAvailablePlaylists, createPlaylist, appendTracks, replaceTracks } from '@/toolbox/save';
+import { getAvailablePlaylists, createPlaylist, appendTracks, replaceTracks, saveToLibrary } from '@/toolbox/save';
 import { auth } from './auth';
 
 export interface ResultItem {
@@ -255,6 +255,22 @@ const actions = {
     }
 
     promise
+      .catch((err: any) => {
+        commit("setExecutionError", err.message);
+      }).finally(() => {
+        commit("finishExecution");
+      });
+  },
+  executeSaveToLibrary({ commit, state, rootState }: ActionContext<QueryState, any>) {
+    if (state.executing) {
+      return;
+    }
+
+    commit("startExecution");
+    const authCode = rootState.auth.code;
+    const tracks = state.results.items.map(i => i.track);
+
+    saveToLibrary(authCode, tracks)
       .catch((err: any) => {
         commit("setExecutionError", err.message);
       }).finally(() => {
