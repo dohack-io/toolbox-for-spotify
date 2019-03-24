@@ -5,32 +5,38 @@
 
       <b-list-group>
         <b-list-group-item>
-          <div class="row">
+          <div v-if="items.length > 0" class="row">
             <div class="col-1 text-center p-0">
-              <b-form-checkbox v-model="allSongsSelected" @change="markAllSongs"></b-form-checkbox>
+              <b-form-checkbox
+                :checked="selectedSongs === items.length"
+                @change="markAllResultItems"
+              ></b-form-checkbox>
             </div>
-            <div class="col-11 p-0">{{ selectedItemCount }} Songs selected</div>
+            <div class="col-11 p-0">{{ selectedSongs }} Songs selected</div>
+          </div>
+          <div v-if="items.length == 0" class="row">
+            <div class="col">
+              No results found
+            </div>
           </div>
         </b-list-group-item>
 
-        <b-list-group-item
-          v-for="song in items.map(i => i.track)"
-          v-bind:key="song.id"
-        >
+        <b-list-group-item v-for="item in items" v-bind:key="item.track.id">
           <div class="row align-items-center">
             <div class="col-1 text-center p-0">
-              <b-form-checkbox v-model="song.selected"></b-form-checkbox>
+              <b-form-checkbox v-model="item.selected"></b-form-checkbox>
             </div>
             <div class="col-1 p-0">
-              <img :src="song | getCoverUrl" alt="" class="src" />
+              <img :src="item.track | getCoverUrl" alt="" class="src" />
             </div>
             <div class="col-10 p-0">
               <h4>
-                {{ song.artists | concatFields("name") }} - {{ song.name }}
+                {{ item.track.artists | concatFields("name") }} -
+                {{ item.track.name }}
               </h4>
               <h6>
-                {{ song.album.name }} -
-                {{ song.duration_ms | msToMinutesAndSeconds }}
+                {{ item.track.album.name }} -
+                {{ item.track.duration_ms | msToMinutesAndSeconds }}
               </h6>
             </div>
           </div>
@@ -43,58 +49,26 @@
 <script lang="ts">
 import Vue from "vue";
 
+import { createHelpers } from "vuex-map-fields";
+import { mapActions, mapGetters } from "vuex";
+
+const { mapFields, mapMultiRowFields } = createHelpers({
+  getterType: "query/getField",
+  mutationType: "query/updateField"
+});
+
 export default Vue.extend({
   name: "query-results",
   components: {},
   data() {
-    return {
-      selectedItemCount: 0,
-      allSongsSelected: false,
-      items: [
-        {
-          track: {
-            selected: false,
-            album: {
-              images: [
-                {
-                  height: 640,
-                  url:
-                    "https://i.scdn.co/image/9f4b8d0cd28219d7f583395f75a86a59e91c63b0",
-                  width: 640
-                },
-                {
-                  height: 300,
-                  url:
-                    "https://i.scdn.co/image/f5c995797b1888873918aabee7737b2bb758a9ef",
-                  width: 300
-                },
-                {
-                  height: 64,
-                  url:
-                    "https://i.scdn.co/image/31e2082a346fb9838e1b9449d2f198f127077376",
-                  width: 64
-                }
-              ],
-              name: "Bee-Sting"
-            },
-            artists: [
-              {
-                name: "The Wombats"
-              }
-            ],
-            duration_ms: 214432,
-            id: "7xdPwAhj4mMqDaNxvNoYnV",
-            name: "Bee-Sting"
-          },
-          video_thumbnail: { url: null }
-        }
-      ]
-    };
+    return {};
   },
   methods: {
-    markAllSongs(checked: boolean) {
-      this.items.forEach(i => (i.track.selected = checked));
-    }
+    ...mapActions("query", ["markAllResultItems"])
+  },
+  computed: {
+    ...mapGetters("query", ["selectedSongs"]),
+    ...mapMultiRowFields(["results.items"])
   },
   filters: {
     concatFields(artists: any[], fieldName: string) {
@@ -110,17 +84,6 @@ export default Vue.extend({
       } else if ("images" in song.album) {
         return song.album.images[2].url;
       }
-    }
-  },
-  watch: {
-    items: {
-      handler(value) {
-        this.selectedItemCount = this.items.filter(
-          i => i.track.selected
-        ).length;
-        this.allSongsSelected = this.selectedItemCount === this.items.length;
-      },
-      deep: true
     }
   }
 });

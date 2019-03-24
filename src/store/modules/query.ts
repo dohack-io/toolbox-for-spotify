@@ -34,7 +34,7 @@ export interface QueryState {
         }
     };
     executing: boolean,
-    error: string|undefined,
+    error: string | undefined,
     results: {
         items: ResultItem[],
     };
@@ -85,7 +85,9 @@ const getters = {
     canExecuteQuery: (state: QueryState, getters: { filterExpression: Expression | undefined }) => {
         return /* getters.filterExpression !== undefined && */ !state.executing;
     },
-
+    selectedSongs: (state: QueryState) => {
+        return state.results.items.filter(s => s.selected).length;
+    }
 };
 
 const actions = {
@@ -113,7 +115,7 @@ const actions = {
     removeReleaseDate({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
         commit("setReleaseDates", _.filter(state.settings.filter.simple.releaseDates, (x, i) => i !== index));
     },
-    executeQuery({ commit, state, rootState } : ActionContext<QueryState, any>,) {
+    executeQuery({ commit, state, rootState }: ActionContext<QueryState, any>, ) {
         if (state.executing) {
             return;
         }
@@ -125,7 +127,7 @@ const actions = {
         if (state.settings.source.selected == "all") {
             source = { type: "all" };
         } else if (state.settings.source.selected == "user") {
-            source = { type: "all"};
+            source = { type: "all" };
         } else {
             source = {
                 type: "playlists",
@@ -135,12 +137,15 @@ const actions = {
 
         loadTracksFromSource(authCode, source, undefined).then(results => {
             commit("setQueryResults", results);
-        }).catch(err => {
+        }).catch((err: any) => {
             commit("setQueryError", err.message);
         }).finally(() => {
             commit("finishQueryExecution");
         });
-    }
+    },
+    markAllResultItems({ commit, state, }: ActionContext<QueryState, RootState>, checked: boolean) {
+        commit("setResultItems", _.map(state.results.items, ({ track }) => ({ selected: checked, track })));
+    },
 };
 
 const mutations = {
