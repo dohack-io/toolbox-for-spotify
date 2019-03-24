@@ -38,7 +38,7 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
                     if (response.next !== null) {
                         spotify.getMySavedTracks({
                             offset: response.offset + response.limit,
-                            limit: response.limit,
+                            limit: 50,
                         }, handler);
                     } else {
                         resolve(items);
@@ -46,7 +46,7 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
                 }
             }
 
-            spotify.getMySavedTracks(handler);
+            spotify.getMySavedTracks({ limit: 50 }, handler);
         });
     }
 
@@ -65,7 +65,7 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
                         if (response.next !== null) {
                             spotify.getPlaylistTracks(playlistId, {
                                 offset: response.offset + response.limit,
-                                limit: response.limit,
+                                limit: 50,
                             }, handler);
                         } else {
                             resolve(items);
@@ -73,7 +73,7 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
                     }
                 }
 
-                spotify.getPlaylistTracks(playlistId, handler);
+                spotify.getPlaylistTracks(playlistId, { limit: 50 }, handler);
             });
         });
 
