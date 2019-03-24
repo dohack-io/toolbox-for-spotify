@@ -34,6 +34,8 @@ function makeBinOp<T>(field: P.Parser<any>, op: P.Parser<any>, value: P.Parser<T
 
 const conditions = [
   makeBinOp(P.string("artist"), ops.eq, vals.str, condition.matchArtist),
+  makeBinOp(P.string("title"), ops.eq, vals.str, condition.matchSongTitle),
+  makeBinOp(P.string("album"), ops.eq, vals.str, condition.matchAlbumTitle),
   makeBinOp(P.string("year"), ops.eq, vals.num, (year: number) => condition.matchYear("eq", year)),
   makeBinOp(P.string("year"), ops.gt, vals.num, (year: number) => condition.matchYear("gt", year)),
   makeBinOp(P.string("year"), ops.lt, vals.num, (year: number) => condition.matchYear("lt", year)),

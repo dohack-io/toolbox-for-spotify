@@ -29,7 +29,6 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
             let items: SpotifyApi.TrackObjectFull[] = [];
 
             function handler(err: SpotifyWebApi.ErrorObject, response: SpotifyApi.UsersSavedTracksResponse) {
-                console.log(response);
                 if (err) {
                     reject(err);
                 } else {
