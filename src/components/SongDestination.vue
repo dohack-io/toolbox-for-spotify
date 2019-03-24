@@ -13,7 +13,8 @@
             variant="success"
             class="float-right"
             :disabled="!canSaveToLibrary"
-            >Save <i class="fas fa-save ml-1"></i
+            @click="executeSaveToLibrary()"
+            >Save <i class="fas ml-1" :class="executeSaveLibraryButtonClass"></i
           ></b-button>
         </b-card>
       </b-col>
@@ -41,7 +42,11 @@
                 class="float-right mt-2"
                 :disabled="!canSaveToNewPlaylist"
                 @click="executeSaveToNewPlaylist()"
-                >Save <i class="fas fa-save ml-1"></i
+                >Save
+                <i
+                  class="fas ml-1"
+                  :class="executeSaveNewPlaylistButtonClass"
+                ></i
               ></b-button>
             </div>
           </div>
@@ -78,7 +83,11 @@
                 class="float-right mt-2"
                 :disabled="!canSaveToExistingPlaylist"
                 @click="executeSaveToExistingPlaylist()"
-                >Save <i class="fas fa-save ml-1"></i
+                >Save
+                <i
+                  class="fas ml-1"
+                  :class="executeSaveExistingPlaylistButtonClass"
+                ></i
               ></b-button>
             </div>
           </div>
@@ -124,11 +133,36 @@ export default Vue.extend({
         value: p.id,
         text: p.name
       }));
+    },
+    executeSaveLibraryButtonClass(): any {
+      const executing = (this as any).executing === "library";
+      return {
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
+      };
+    },
+    executeSaveNewPlaylistButtonClass(): any {
+      const executing = (this as any).executing === "newPlaylist";
+      return {
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
+      };
+    },
+    executeSaveExistingPlaylistButtonClass(): any {
+      const executing = (this as any).executing === "existingPlaylist";
+      return {
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
+      };
     }
   },
   methods: {
     ...mapActions("query", [
       "executeSelectResults",
+      "executeSaveToLibrary",
       "executeSaveToNewPlaylist",
       "executeSaveToExistingPlaylist"
     ])
