@@ -30,7 +30,6 @@ const scopes = [
   "playlist-read-private",
   "playlist-modify-public",
   "playlist-modify-private",
-  "playlist-modify-private",
 ];
 
 const authUrl = "https://accounts.spotify.com/authorize?";

@@ -18,26 +18,31 @@ export function createPlaylist(token: string, name: string, publicPlaylist: bool
         });
 }
 
-export async function getAvailablePlaylists(token: string) :  Promise<SpotifyApi.PlaylistObjectSimplified[]> {
+export async function getAvailablePlaylists(token: string) {
     const spotify = new Spotify();
     spotify.setAccessToken(token);
 
-    let items: SpotifyApi.PlaylistObjectSimplified[]  = [];
-    let offset = 0;
+    let items: SpotifyApi.PlaylistObjectSimplified[] = [];
+    var offset = 0;
     const limit = 50;
-    let done = false;
 
-    while (!done) {
-        let result = await spotify.getUserPlaylists(undefined, { offset, limit });
-        items = [...items, ...result.items];
-        offset = result.offset + result.limit;
+    // FIXME...
+    // let done = false;
 
-        if (result.next == null) {
-            done = true;
-        }
-    }
+    // while (!done) {
+    //     let result = await spotify.getUserPlaylists(undefined, { offset, limit });
+    //     items = [...items, ...result.items];
+    //     offset = result.offset + result.limit;
 
-    return items;
+    //     if (result.next == null) {
+    //         done = true;
+    //     }
+    // }
+
+    // One request shall be enough...
+    let result = await spotify.getUserPlaylists(undefined, { offset, limit });
+
+    return result.items;
 }
 
 export function appendTracks(token: string, playlistId: string, tracks: SpotifyApi.TrackObjectSimplified[]): Promise<any> {
