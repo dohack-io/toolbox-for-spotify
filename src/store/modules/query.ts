@@ -158,7 +158,7 @@ const actions = {
       return;
     }
 
-    commit("startQueryExecution");
+    commit("startExecution");
     const authCode = rootState.auth.code;
     let source: QuerySource;
 

@@ -26,9 +26,21 @@
             v-model="name"
             placeholder="Playlist Name"
           />
-          <b-button variant="success" class="float-right mt-2"
-            >Save <i class="fas fa-save ml-1"></i
-          ></b-button>
+          <div class="row">
+            <div class="col-6">
+              <b-form-checkbox v-model="publicPlaylist" class="mt-2 ml-2"
+                >Public</b-form-checkbox
+              >
+            </div>
+            <div class="col-6">
+              <b-button
+                variant="success"
+                class="float-right mt-2"
+                @click="executeSaveToNewPlaylist()"
+                >Save <i class="fas fa-save ml-1"></i
+              ></b-button>
+            </div>
+          </div>
         </b-card>
       </b-col>
     </b-row>
@@ -38,10 +50,7 @@
           title="Existing Playlist"
           sub-title="Save the selected songs to a existing playlist."
         >
-          <b-form-select
-            v-model="selectedId"
-            :options="availablePlaylist"
-          />
+          <b-form-select v-model="selectedId" :options="availablePlaylist" />
           <div class="row align-items-center no-gutters">
             <div class="col-4">
               <b-button variant="info" class="mt-2"
@@ -57,7 +66,10 @@
               </b-form-group>
             </div>
             <div class="col-4">
-              <b-button variant="success" class="float-right mt-2"
+              <b-button
+                variant="success"
+                class="float-right mt-2"
+                @click="executeSaveToExistingPlaylist()"
                 >Save <i class="fas fa-save ml-1"></i
               ></b-button>
             </div>
@@ -89,9 +101,16 @@ export default Vue.extend({
   computed: {
     ...mapFields([
       "sink.new.name",
+      "sink.new.publicPlaylist",
       "sink.existing.mode",
       "sink.existing.availablePlaylist",
       "sink.existing.selectedId"
+    ])
+  },
+  methods: {
+    ...mapActions("query", [
+      "executeSaveToNewPlaylist",
+      "executeSaveToExistingPlaylist"
     ])
   }
 });
