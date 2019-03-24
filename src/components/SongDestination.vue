@@ -39,8 +39,8 @@
           sub-title="Save the selected songs to a existing playlist."
         >
           <b-form-select
-            v-model="existing.selectedId"
-            :options="existing.availablePlaylist"
+            v-model="selectedId"
+            :options="availablePlaylist"
           />
           <div class="row align-items-center no-gutters">
             <div class="col-4">
