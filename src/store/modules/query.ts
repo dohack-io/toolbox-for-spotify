@@ -83,7 +83,7 @@ const getters = {
         }
     },
     canExecuteQuery: (state: QueryState, getters: { filterExpression: Expression | undefined }) => {
-        return getters.filterExpression !== undefined;
+        return /* getters.filterExpression !== undefined && */ !state.executing;
     },
 
 };
