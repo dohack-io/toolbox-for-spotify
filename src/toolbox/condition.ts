@@ -11,6 +11,18 @@ export interface MatchArtistCondition extends Condition {
   artist: string;
 }
 
+export interface MatchTrackTitleCondition extends Condition {
+  type: "condition";
+  attribute: "title";
+  title: string;
+}
+
+export interface MatchAlbumTitleCondition extends Condition {
+  type: "condition";
+  attribute: "title";
+  title: string;
+}
+
 type ComparisonOp = "eq" | "gt" | "lt" | "ge" | "le";
 
 export interface MatchYearCondition extends Condition {
@@ -33,6 +45,32 @@ export function matchArtist(artist: string): MatchArtistCondition {
   }
 }
 
+export function matchSongTitle(title: string): MatchTrackTitleCondition {
+  const normalized = title.toLocaleLowerCase();
+
+  return {
+    type: "condition",
+    attribute: "title",
+    title: normalized,
+    test(track: SpotifyApi.TrackObjectFull) {
+      return track.name.toLocaleLowerCase() === normalized;
+    }
+  }
+}
+
+export function matchAlbumTitle(title: string): MatchAlbumTitleCondition {
+  const normalized = title.toLocaleLowerCase();
+
+  return {
+    type: "condition",
+    attribute: "title",
+    title: normalized,
+    test(track: SpotifyApi.TrackObjectFull) {
+      return track.album.name.toLocaleLowerCase() === normalized;
+    }
+  }
+}
+
 export function matchYear(op: ComparisonOp, year: number): MatchYearCondition {
   return {
     type: "condition",
@@ -41,10 +79,8 @@ export function matchYear(op: ComparisonOp, year: number): MatchYearCondition {
     year,
     test(track: SpotifyApi.TrackObjectFull): boolean {
       const album = track.album as SpotifyApi.AlbumObjectFull;
-      console.log(album);
       if (album.release_date !== undefined) {
         const release = parseInt(album.release_date.substring(0, 4), 10);
-        console.log(release);
         switch (op) {
           case "eq":
             return release == year;
