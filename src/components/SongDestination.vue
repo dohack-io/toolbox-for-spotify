@@ -13,7 +13,8 @@
             variant="success"
             class="float-right"
             :disabled="!canSaveToLibrary"
-            >Save <i class="fas fa-save ml-1"></i
+            @click="executeSaveToLibrary()"
+            >Save <i class="fas ml-1" :class="executeSaveLibraryButtonClass"></i
           ></b-button>
         </b-card>
       </b-col>
@@ -41,7 +42,11 @@
                 class="float-right mt-2"
                 :disabled="!canSaveToNewPlaylist"
                 @click="executeSaveToNewPlaylist()"
-                >Save <i class="fas fa-save ml-1"></i
+                >Save
+                <i
+                  class="fas ml-1"
+                  :class="executeSaveNewPlaylistButtonClass"
+                ></i
               ></b-button>
             </div>
           </div>
@@ -61,7 +66,11 @@
                 variant="info"
                 class="mt-2"
                 @click="executeSelectResults()"
-                ><i class="fas fa-sync mr-1"></i> Refresh Playlists</b-button
+                ><i
+                  class="fas fa-sync mr-1"
+                  :class="executeRefreshPlaylistButtonClass"
+                ></i>
+                Refresh Playlists</b-button
               >
             </div>
             <div class="col-4 text-center">
@@ -78,7 +87,11 @@
                 class="float-right mt-2"
                 :disabled="!canSaveToExistingPlaylist"
                 @click="executeSaveToExistingPlaylist()"
-                >Save <i class="fas fa-save ml-1"></i
+                >Save
+                <i
+                  class="fas ml-1"
+                  :class="executeSaveExistingPlaylistButtonClass"
+                ></i
               ></b-button>
             </div>
           </div>
@@ -108,6 +121,7 @@ export default Vue.extend({
   },
   computed: {
     ...mapFields([
+      "executing",
       "sink.new.name",
       "sink.new.publicPlaylist",
       "sink.existing.mode",
@@ -124,11 +138,42 @@ export default Vue.extend({
         value: p.id,
         text: p.name
       }));
+    },
+    executeSaveLibraryButtonClass(): any {
+      const executing = (this as any).executing === "library";
+      return {
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
+      };
+    },
+    executeSaveNewPlaylistButtonClass(): any {
+      const executing = (this as any).executing === "newPlaylist";
+      return {
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
+      };
+    },
+    executeSaveExistingPlaylistButtonClass(): any {
+      const executing = (this as any).executing === "existingPlaylist";
+      return {
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
+      };
+    },
+    executeRefreshPlaylistButtonClass(): any {
+      const executing = (this as any).executing === "select";
+      return {
+        "fa-spin": executing
+      };
     }
   },
   methods: {
     ...mapActions("query", [
       "executeSelectResults",
+      "executeSaveToLibrary",
       "executeSaveToNewPlaylist",
       "executeSaveToExistingPlaylist"
     ])

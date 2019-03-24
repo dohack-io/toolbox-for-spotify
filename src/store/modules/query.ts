@@ -63,7 +63,7 @@ const state: QueryState = {
             playlists: [{ id: "" }],
         },
         filter: {
-            selected: "simple",
+            selected: "complex",
             simple: {
                 artists: [{ name: "" }],
                 genres: [{ name: "" }],

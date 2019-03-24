@@ -41,7 +41,7 @@
             :disabled="!canSaveResults"
           >
             Save Results
-            <i class="fas fa-arrow-alt-circle-right ml-2"></i>
+            <i class="fas ml-2" :class="executeSelectButtonClass"></i>
           </b-button>
         </div>
       </div>
@@ -84,11 +84,20 @@ export default Vue.extend({
   computed: {
     ...mapFields(["display", "executing", "error"]),
     ...mapGetters("query", ["canExecuteQuery", "canSaveResults"]),
-    executeQueryButtonClass() {
+    executeQueryButtonClass(): any {
+      const executing = (this as any).executing === "query";
       return {
-        "fa-arrow-alt-circle-right": !this.executing,
-        "fa-spin": this.executing,
-        "fa-spinner": this.executing
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
+      };
+    },
+    executeSelectButtonClass(): any {
+      const executing = (this as any).executing === "select";
+      return {
+        "fa-arrow-alt-circle-right": !executing,
+        "fa-spin": executing,
+        "fa-spinner": executing
       };
     }
   },
