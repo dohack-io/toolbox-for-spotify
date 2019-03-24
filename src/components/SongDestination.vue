@@ -66,7 +66,11 @@
                 variant="info"
                 class="mt-2"
                 @click="executeSelectResults()"
-                ><i class="fas fa-sync mr-1"></i> Refresh Playlists</b-button
+                ><i
+                  class="fas fa-sync mr-1"
+                  :class="executeRefreshPlaylistButtonClass"
+                ></i>
+                Refresh Playlists</b-button
               >
             </div>
             <div class="col-4 text-center">
@@ -117,6 +121,7 @@ export default Vue.extend({
   },
   computed: {
     ...mapFields([
+      "executing",
       "sink.new.name",
       "sink.new.publicPlaylist",
       "sink.existing.mode",
@@ -156,6 +161,12 @@ export default Vue.extend({
         "fa-arrow-alt-circle-right": !executing,
         "fa-spin": executing,
         "fa-spinner": executing
+      };
+    },
+    executeRefreshPlaylistButtonClass(): any {
+      const executing = (this as any).executing === "select";
+      return {
+        "fa-spin": executing
       };
     }
   },
