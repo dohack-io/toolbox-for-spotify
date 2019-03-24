@@ -30,7 +30,8 @@ export interface QueryState {
             },
             complex: {
                 expression: string
-            }
+            },
+            
         }
     };
     executing: boolean,

@@ -47,7 +47,7 @@ export function matchYear(op: ComparisonOp, year: number): MatchYearCondition {
         console.log(release);
         switch (op) {
           case "eq":
-            return release === year;
+            return release == year;
           case "gt":
             return release > year;
           case "lt":
