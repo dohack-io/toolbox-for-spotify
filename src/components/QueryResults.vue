@@ -26,10 +26,10 @@
             <div class="col-1 text-center p-0">
               <b-form-checkbox v-model="item.selected"></b-form-checkbox>
             </div>
-            <div class="col-1 p-0">
+            <div class="d-none d-lg-block col-md-1 p-0">
               <img :src="item.track | getCoverUrl" alt="" class="src" />
             </div>
-            <div class="col-10 p-0">
+            <div class="col-11 col-md-10 p-0">
               <h4>
                 {{ item.track.artists | concatFields("name") }} -
                 {{ item.track.name }}
