@@ -9,7 +9,10 @@
           title="Library"
           sub-title="Save the selected songs to your library."
         >
-          <b-button variant="success" class="float-right"
+          <b-button
+            variant="success"
+            class="float-right"
+            :disabled="!canSaveToLibrary"
             >Save <i class="fas fa-save ml-1"></i
           ></b-button>
         </b-card>
@@ -36,6 +39,7 @@
               <b-button
                 variant="success"
                 class="float-right mt-2"
+                :disabled="!canSaveToNewPlaylist"
                 @click="executeSaveToNewPlaylist()"
                 >Save <i class="fas fa-save ml-1"></i
               ></b-button>
@@ -50,10 +54,13 @@
           title="Existing Playlist"
           sub-title="Save the selected songs to a existing playlist."
         >
-          <b-form-select v-model="selectedId" :options="availablePlaylist" />
+          <b-form-select v-model="selectedId" :options="playlistOptions" />
           <div class="row align-items-center no-gutters">
             <div class="col-4">
-              <b-button variant="info" class="mt-2"
+              <b-button
+                variant="info"
+                class="mt-2"
+                @click="executeSelectResults()"
                 ><i class="fas fa-sync mr-1"></i> Refresh Playlists</b-button
               >
             </div>
@@ -69,6 +76,7 @@
               <b-button
                 variant="success"
                 class="float-right mt-2"
+                :disabled="!canSaveToExistingPlaylist"
                 @click="executeSaveToExistingPlaylist()"
                 >Save <i class="fas fa-save ml-1"></i
               ></b-button>
@@ -85,7 +93,7 @@ import Vue from "vue";
 import MultiInputLines from "@/components/MultiInputLines.vue";
 
 import { createHelpers } from "vuex-map-fields";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 const { mapFields, mapMultiRowFields } = createHelpers({
   getterType: "query/getField",
@@ -105,10 +113,22 @@ export default Vue.extend({
       "sink.existing.mode",
       "sink.existing.availablePlaylist",
       "sink.existing.selectedId"
-    ])
+    ]),
+    ...mapGetters("query", [
+      "canSaveToLibrary",
+      "canSaveToNewPlaylist",
+      "canSaveToExistingPlaylist"
+    ]),
+    playlistOptions() {
+      return (this as any).availablePlaylist.map((p: any) => ({
+        value: p.id,
+        text: p.name
+      }));
+    }
   },
   methods: {
     ...mapActions("query", [
+      "executeSelectResults",
       "executeSaveToNewPlaylist",
       "executeSaveToExistingPlaylist"
     ])

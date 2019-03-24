@@ -30,7 +30,7 @@
           <b-button
             class="float-right mt-3"
             variant="success"
-            @click="display = 'save'"
+            @click="executeSelectResults()"
             :disabled="!canSaveResults"
           >
             Save Results
@@ -90,7 +90,7 @@ export default Vue.extend({
     }
   },
   methods: {
-    ...mapActions("query", ["executeQuery"])
+    ...mapActions("query", ["executeQuery", "executeSelectResults"])
   }
 });
 </script>
