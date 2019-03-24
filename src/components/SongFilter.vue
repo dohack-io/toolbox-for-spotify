@@ -15,8 +15,8 @@
             class="float-right"
           >
             <i class="fas fa-random mr-2"></i>
-            <span v-if="selected === 'simple'">Simple mode</span>
-            <span v-if="selected === 'complex'">Complex mode</span>
+            <span v-if="selected === 'simple'">Complex mode</span>
+            <span v-if="selected === 'complex'">Simple mode</span>
           </b-button>
         </div>
       </div>
@@ -92,7 +92,7 @@
             <b-form-textarea
               id="textarea-complex"
               v-model="expression"
-              placeholder="Enter query..."
+              placeholder="Enter filter..."
               rows="5"
               style="font-family:monospace;"
             />
