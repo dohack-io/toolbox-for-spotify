@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <template v-if="display == 'settings'">
       <query-settings />
       <div class="row">

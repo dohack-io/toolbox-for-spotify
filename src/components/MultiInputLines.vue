@@ -2,11 +2,7 @@
   <div class="container p-0">
     <div v-for="(item, index) in items" :key="index" class="row mb-1">
       <div class="col-9 col-md-11 pr-0">
-        <b-form-input
-          type="text"
-          v-model="item[valuePropertyName]"
-          :placeholder="placeholder"
-        />
+        <slot v-bind:item="item"></slot>
       </div>
       <div class="col-3 col-md-1 pl-0">
         <b-button

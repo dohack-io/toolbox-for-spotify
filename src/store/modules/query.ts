@@ -6,15 +6,15 @@ import * as _ from "lodash";
 import { getField, updateField } from "vuex-map-fields";
 import SpotifyWebApi from 'spotify-web-api-js';
 import { Expression } from '@/toolbox/filter';
-import { parseExpression} from "../../toolbox/parser"
+import { parseExpression } from "../../toolbox/parser"
 
 export interface ResultItem {
     selected: boolean,
-    track: SpotifyApi.TrackObjectFull
+    track: SpotifyApi.TrackObjectFull;
 }
 
 export interface QueryState {
-    display: "settings"|"results",
+    display: "settings" | "results",
     settings: {
         source: {
             selected: "all" | "playlists" | "user",
@@ -22,7 +22,11 @@ export interface QueryState {
         },
         filter: {
             selected: "simple" | "complex",
-            simple: {},
+            simple: {
+                artists: Array<{ name: string }>,
+                genres: Array<{ name: string }>,
+                releaseDates: Array<{ year: number }>
+            },
             complex: {
                 expression: string
             }
@@ -42,7 +46,11 @@ const state: QueryState = {
         },
         filter: {
             selected: "simple",
-            simple: {},
+            simple: {
+                artists: [{ name: "" }],
+                genres: [{ name: "" }],
+                releaseDates: [{ year: 2019 }]
+            },
             complex: {
                 expression: ""
             }
@@ -69,7 +77,7 @@ const getters = {
             return undefined;
         }
     },
-    canExecuteQuery: (state: QueryState, getters: { filterExpression: Expression|undefined }) => {
+    canExecuteQuery: (state: QueryState, getters: { filterExpression: Expression | undefined }) => {
         return getters.filterExpression !== undefined;
     },
 
@@ -80,7 +88,25 @@ const actions = {
         commit("setPlaylists", [...state.settings.source.playlists, { id: "" }]);
     },
     removePlaylist({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
-        commit("setPlaylists", _.filter(state.settings.source.playlists, (x, i) => i != index));
+        commit("setPlaylists", _.filter(state.settings.source.playlists, (x, i) => i !== index));
+    },
+    addNewArtist({ commit, state }: ActionContext<QueryState, RootState>) {
+        commit("setArtists", [...state.settings.filter.simple.artists, { name: "" }]);
+    },
+    removeArtist({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
+        commit("setArtists", _.filter(state.settings.filter.simple.artists, (x, i) => i !== index));
+    },
+    addNewGenre({ commit, state }: ActionContext<QueryState, RootState>) {
+        commit("setGenres", [...state.settings.filter.simple.genres, { name: "" }]);
+    },
+    removeGenre({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
+        commit("setGenres", _.filter(state.settings.filter.simple.genres, (x, i) => i !== index));
+    },
+    addNewReleaseDate({ commit, state }: ActionContext<QueryState, RootState>) {
+        commit("setReleaseDates", [...state.settings.filter.simple.releaseDates, { year: 2019 }]);
+    },
+    removeReleaseDate({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
+        commit("setReleaseDates", _.filter(state.settings.filter.simple.releaseDates, (x, i) => i !== index));
     },
 };
 
@@ -88,6 +114,15 @@ const mutations = {
     updateField,
     setPlaylists(store: QueryState, playlists: Array<{ id: string }>) {
         store.settings.source.playlists = playlists;
+    },
+    setArtists(store: QueryState, artists: Array<{ name: string }>) {
+        store.settings.filter.simple.artists = artists;
+    },
+    setGenres(store: QueryState, genres: Array<{ name: string }>) {
+        store.settings.filter.simple.genres = genres;
+    },
+    setReleaseDates(store: QueryState, releaseDates: Array<{ year: number }>) {
+        store.settings.filter.simple.releaseDates = releaseDates;
     },
     setResultItems(store: QueryState, items: ResultItem[]) {
         store.results.items = items;
