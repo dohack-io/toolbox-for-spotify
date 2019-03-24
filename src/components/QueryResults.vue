@@ -76,14 +76,17 @@ export default Vue.extend({
     },
     msToMinutesAndSeconds(ms: number) {
       const seconds = ms / 1000;
-      return Math.floor(seconds / 60) + ":" + Math.floor(seconds % 60);
+      const min = Math.floor(seconds / 60);
+      const sec = ("" + Math.floor(seconds % 60)).padStart(2, '0');
+      return min + ":" + sec;
     },
     getCoverUrl(song: any) {
       if ("images" in song) {
         return song.images[2].url;
-      } else if ("images" in song.album) {
-        return song.album.images[2].url;
+      } else if ("album" in song && "images" in song.album && song.album.images.length > 0) {
+        return song.album.images[Math.max(2, song.album.images.length - 1)].url;
       }
+      return "";
     }
   }
 });
