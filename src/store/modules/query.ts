@@ -127,7 +127,7 @@ const actions = {
         if (state.settings.source.selected == "all") {
             source = { type: "all" };
         } else if (state.settings.source.selected == "user") {
-            source = { type: "all" };
+            source = { type: "user" };
         } else {
             source = {
                 type: "playlists",
@@ -136,7 +136,10 @@ const actions = {
         }
 
         loadTracksFromSource(authCode, source, undefined).then(results => {
-            commit("setQueryResults", results);
+            return new Promise(resolve => setTimeout(() => {
+                commit("setQueryResults", results);
+                resolve();
+            }, 1000));
         }).catch((err: any) => {
             commit("setQueryError", err.message);
         }).finally(() => {
