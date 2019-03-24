@@ -56,39 +56,22 @@ export interface QueryState {
 type FilterExpressionState = { status: "empty" } | { status: "success", expr: Expression } | { status: "error", message: string };
 
 const state: QueryState = {
-    display: "settings",
-    settings: {
-        source: {
-            selected: "all",
-            playlists: [{ id: "" }],
-        },
-        filter: {
-            selected: "simple",
-            simple: {
-                artists: [{ name: "" }],
-                genres: [{ name: "" }],
-                releaseDates: [{ year: 2019 }]
-            },
-            complex: {
-                expression: ""
-            }
-        }
+  display: "settings",
+  settings: {
+    source: {
+      selected: "all",
+      playlists: [{ id: "" }],
     },
-    executing: false,
-    error: undefined,
-    results: {
-        items: []
-    },
-    sink: {
-        new: {
-            name: "",
-            publicPlaylist: false,
-        },
-        existing: {
-            mode: "append",
-            availablePlaylist: [],
-            selectedId: undefined,
-        },
+    filter: {
+      selected: "simple",
+      simple: {
+        artists: [{ name: "" }],
+        genres: [{ name: "" }],
+        releaseDates: [{ year: 2019 }]
+      },
+      complex: {
+        expression: ""
+      }
     }
   },
   executing: false,
@@ -99,6 +82,7 @@ const state: QueryState = {
   sink: {
     new: {
       name: "",
+      publicPlaylist: false,
     },
     existing: {
       mode: "append",
@@ -189,138 +173,138 @@ const actions = {
       };
     }
 
-        loadTracksFromSource(authCode, source, undefined)
-            .then(results => {
-                if (filter.status == "success") {
-                    return filterTracks(results, filter.expr);
-                } else {
-                    return results;
-                }
-            }).then((results) => {
-                return new Promise(resolve => setTimeout(() => {
-                    commit("setQueryResults", results);
-                    resolve();
-                }, 1000));
-            })
-            .catch((err: any) => {
-                commit("setExecutionError", err.message);
-            }).finally(() => {
-                commit("finishExecution");
-            });
-    },
-    markAllResultItems({ commit, state, }: ActionContext<QueryState, RootState>, checked: boolean) {
-        commit("setResultItems", _.map(state.results.items, ({ track }) => ({ selected: checked, track })));
-    },
-    executeSelectResults({ commit, state, rootState }: ActionContext<QueryState, any>) {
-        if (state.executing) {
-            return;
-        }
-
-        commit("startExecution");
-        const authCode = rootState.auth.code;
-
-        getAvailablePlaylists(authCode)
-            .then((results) => {
-                return new Promise(resolve => setTimeout(() => {
-                    commit("setAvailablePlaylists", results);
-                    commit("setDisplay", "save");
-                    resolve();
-                }, 1000));
-            })
-            .catch((err: any) => {
-                commit("setExecutionError", err.message);
-            }).finally(() => {
-                commit("finishExecution");
-            });
-    },
-    executeSaveToNewPlaylist({ commit, state, rootState }: ActionContext<QueryState, any>) {
-        if (state.executing) {
-            return;
-        }
-
-        commit("startExecution");
-        const authCode = rootState.auth.code;
-        const {name, publicPlaylist } = state.sink.new;
-        const tracks = state.results.items.map(i => i.track);
-
-        return createPlaylist(authCode, name, publicPlaylist)
-            .then((playlist) => {
-                return appendTracks(authCode, playlist.id, tracks);
-            })
-            .catch((err: any) => {
-                commit("setExecutionError", err.message);
-            }).finally(() => {
-                commit("finishExecution");
-            });
-    },
-    executeSaveToExistingPlaylist({ commit, state, rootState }: ActionContext<QueryState, any>) {
-        if (state.executing || state.sink.existing.selectedId === undefined) {
-            return;
-        }
-
-        commit("startExecution");
-        const authCode = rootState.auth.code;
-        const tracks = state.results.items.map(i => i.track);
-        const playlistId = state.sink.existing.selectedId;
-
-        let promise;
-        if (state.sink.existing.mode === "append") {
-            promise = appendTracks(authCode, playlistId, tracks);
+    loadTracksFromSource(authCode, source, undefined)
+      .then(results => {
+        if (filter.status == "success") {
+          return filterTracks(results, filter.expr);
         } else {
-            promise = replaceTracks(authCode, playlistId, tracks);
+          return results;
         }
+      }).then((results) => {
+        return new Promise(resolve => setTimeout(() => {
+          commit("setQueryResults", results);
+          resolve();
+        }, 1000));
+      })
+      .catch((err: any) => {
+        commit("setExecutionError", err.message);
+      }).finally(() => {
+        commit("finishExecution");
+      });
+  },
+  markAllResultItems({ commit, state, }: ActionContext<QueryState, RootState>, checked: boolean) {
+    commit("setResultItems", _.map(state.results.items, ({ track }) => ({ selected: checked, track })));
+  },
+  executeSelectResults({ commit, state, rootState }: ActionContext<QueryState, any>) {
+    if (state.executing) {
+      return;
+    }
 
-        promise
-            .catch((err: any) => {
-                commit("setExecutionError", err.message);
-            }).finally(() => {
-                commit("finishExecution");
-            });
-    },
+    commit("startExecution");
+    const authCode = rootState.auth.code;
+
+    getAvailablePlaylists(authCode)
+      .then((results) => {
+        return new Promise(resolve => setTimeout(() => {
+          commit("setAvailablePlaylists", results);
+          commit("setDisplay", "save");
+          resolve();
+        }, 1000));
+      })
+      .catch((err: any) => {
+        commit("setExecutionError", err.message);
+      }).finally(() => {
+        commit("finishExecution");
+      });
+  },
+  executeSaveToNewPlaylist({ commit, state, rootState }: ActionContext<QueryState, any>) {
+    if (state.executing) {
+      return;
+    }
+
+    commit("startExecution");
+    const authCode = rootState.auth.code;
+    const { name, publicPlaylist } = state.sink.new;
+    const tracks = state.results.items.map(i => i.track);
+
+    return createPlaylist(authCode, name, publicPlaylist)
+      .then((playlist) => {
+        return appendTracks(authCode, playlist.id, tracks);
+      })
+      .catch((err: any) => {
+        commit("setExecutionError", err.message);
+      }).finally(() => {
+        commit("finishExecution");
+      });
+  },
+  executeSaveToExistingPlaylist({ commit, state, rootState }: ActionContext<QueryState, any>) {
+    if (state.executing || state.sink.existing.selectedId === undefined) {
+      return;
+    }
+
+    commit("startExecution");
+    const authCode = rootState.auth.code;
+    const tracks = state.results.items.map(i => i.track);
+    const playlistId = state.sink.existing.selectedId;
+
+    let promise;
+    if (state.sink.existing.mode === "append") {
+      promise = appendTracks(authCode, playlistId, tracks);
+    } else {
+      promise = replaceTracks(authCode, playlistId, tracks);
+    }
+
+    promise
+      .catch((err: any) => {
+        commit("setExecutionError", err.message);
+      }).finally(() => {
+        commit("finishExecution");
+      });
+  },
 };
 
 const mutations = {
-    updateField,
-    setPlaylists(store: QueryState, playlists: Array<{ id: string }>) {
-        store.settings.source.playlists = playlists;
-    },
-    setArtists(store: QueryState, artists: Array<{ name: string }>) {
-        store.settings.filter.simple.artists = artists;
-    },
-    setGenres(store: QueryState, genres: Array<{ name: string }>) {
-        store.settings.filter.simple.genres = genres;
-    },
-    setReleaseDates(store: QueryState, releaseDates: Array<{ year: number }>) {
-        store.settings.filter.simple.releaseDates = releaseDates;
-    },
-    setResultItems(store: QueryState, items: ResultItem[]) {
-        store.results.items = items;
-    },
-    startExecution(store: QueryState) {
-        store.executing = true;
-        store.error = undefined;
-    },
-    finishExecution(store: QueryState) {
-        store.executing = false;
-    },
-    setExecutionError(store: QueryState, error: string) {
-        store.error = error;
-    },
-    setQueryResults(store: QueryState, results: SpotifyApi.TrackObjectFull[]) {
-        store.results.items = results.map(track => {
-            return {
-                selected: true,
-                track
-            };
-        });
-        store.display = "results";
-    },
-    setAvailablePlaylists(store: QueryState, results: SpotifyApi.PlaylistObjectSimplified[]) {
-        store.sink.existing.availablePlaylist = results;
-    },
-    setDisplay(store: QueryState, display: "settings" | "results" | "save") {
-        store.display = display;
-    }
+  updateField,
+  setPlaylists(store: QueryState, playlists: Array<{ id: string }>) {
+    store.settings.source.playlists = playlists;
+  },
+  setArtists(store: QueryState, artists: Array<{ name: string }>) {
+    store.settings.filter.simple.artists = artists;
+  },
+  setGenres(store: QueryState, genres: Array<{ name: string }>) {
+    store.settings.filter.simple.genres = genres;
+  },
+  setReleaseDates(store: QueryState, releaseDates: Array<{ year: number }>) {
+    store.settings.filter.simple.releaseDates = releaseDates;
+  },
+  setResultItems(store: QueryState, items: ResultItem[]) {
+    store.results.items = items;
+  },
+  startExecution(store: QueryState) {
+    store.executing = true;
+    store.error = undefined;
+  },
+  finishExecution(store: QueryState) {
+    store.executing = false;
+  },
+  setExecutionError(store: QueryState, error: string) {
+    store.error = error;
+  },
+  setQueryResults(store: QueryState, results: SpotifyApi.TrackObjectFull[]) {
+    store.results.items = results.map(track => {
+      return {
+        selected: true,
+        track
+      };
+    });
+    store.display = "results";
+  },
+  setAvailablePlaylists(store: QueryState, results: SpotifyApi.PlaylistObjectSimplified[]) {
+    store.sink.existing.availablePlaylist = results;
+  },
+  setDisplay(store: QueryState, display: "settings" | "results" | "save") {
+    store.display = display;
+  }
 };
 
 export const query: Module<QueryState, RootState> = {
