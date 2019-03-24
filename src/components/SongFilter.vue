@@ -20,9 +20,11 @@
           </b-button>
         </div>
       </div>
+
       <div class="container mt-3">
+        <!-- simple query -->
         <div v-if="selected === 'simple'" class="row">
-          <div class="col-4">
+          <div class="col-12 col-lg-4 mb-3 mb-lg-0">
             <b-card title="Artist">
               <b-card-text>
                 <multi-input-lines
@@ -42,7 +44,7 @@
               </b-card-text>
             </b-card>
           </div>
-          <div class="col-4">
+          <div class="col-12 col-lg-4 mb-3 mb-lg-0">
             <b-card title="Genre">
               <b-card-text>
                 <multi-input-lines
@@ -62,7 +64,7 @@
               </b-card-text>
             </b-card>
           </div>
-          <div class="col-4">
+          <div class="col-12 col-lg-4 mb-3 mb-lg-0">
             <b-card title="Release date">
               <b-card-text>
                 <multi-input-lines
@@ -83,6 +85,8 @@
             </b-card>
           </div>
         </div>
+
+        <!-- complex query -->
         <div v-if="selected === 'complex'" class="row">
           <div class="col">
             <b-form-textarea
@@ -118,7 +122,10 @@ export default Vue.extend({
     return {};
   },
   computed: {
-    ...mapFields(["settings.filter.selected", "settings.filter.complex.expression"]),
+    ...mapFields([
+      "settings.filter.selected",
+      "settings.filter.complex.expression"
+    ]),
     ...mapMultiRowFields([
       "settings.filter.simple.artists",
       "settings.filter.simple.genres",
