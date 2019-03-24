@@ -173,6 +173,8 @@ const actions = {
 
         if (state.settings.source.selected == "all") {
             source = { type: "all" };
+            commit("setExecutionError", "Unsupported Method (All Songs) :(");
+            return;
         } else if (state.settings.source.selected == "user") {
             source = { type: "user" };
         } else {

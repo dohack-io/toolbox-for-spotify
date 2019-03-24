@@ -8,7 +8,7 @@
           dismissible
           :show="error !== undefined"
           @dismissed="resetError()"
-        >Unexpected errror: {{ error }}</b-alert>
+        >Unexpected error: {{ error }}</b-alert>
       </div>
     </div>
     <template v-if="display == 'settings'">
