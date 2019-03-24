@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <template v-if="display == 'settings'">
-      <query-settings/>
+      <query-settings />
       <div class="row">
         <div class="col">
           <b-button
@@ -13,17 +13,15 @@
             <i class="fas fa-arrow-alt-circle-right ml-2"></i>
           </b-button>
         </div>
-                  Exevuting: {{ executing }}
-          Error: {{ error }}
+        Exevuting: {{ executing }} Error: {{ error }}
       </div>
     </template>
     <template v-if="display == 'results'">
-      <query-results/>
+      <query-results />
       <div class="row">
         <div class="col">
           <b-button class="mt-3" variant="info" @click="display = 'settings'">
-            <i class="fas fa-arrow-alt-circle-left mr-2"></i> Edit
-            Query
+            <i class="fas fa-arrow-alt-circle-left mr-2"></i> Edit Query
           </b-button>
         </div>
       </div>
