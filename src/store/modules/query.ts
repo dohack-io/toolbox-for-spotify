@@ -4,9 +4,10 @@ import spotify from "spotify-web-api-js";
 
 import * as _ from "lodash";
 import { getField, updateField } from "vuex-map-fields";
-import SpotifyWebApi from 'spotify-web-api-js';
 import { Expression } from '@/toolbox/filter';
 import { parseExpression } from "../../toolbox/parser"
+
+import { loadTracksFromSource, QuerySource } from "../../toolbox/query"
 
 export interface ResultItem {
     selected: boolean,
@@ -32,6 +33,8 @@ export interface QueryState {
             }
         }
     };
+    executing: boolean,
+    error: string|undefined,
     results: {
         items: ResultItem[],
     };
@@ -57,6 +60,8 @@ const state: QueryState = {
         }
 
     },
+    executing: false,
+    error: undefined,
     results: {
         items: []
     }
@@ -108,6 +113,34 @@ const actions = {
     removeReleaseDate({ commit, state, }: ActionContext<QueryState, RootState>, index: number) {
         commit("setReleaseDates", _.filter(state.settings.filter.simple.releaseDates, (x, i) => i !== index));
     },
+    executeQuery({ commit, state, rootState } : ActionContext<QueryState, any>,) {
+        if (state.executing) {
+            return;
+        }
+
+        commit("startQueryExecution");
+        const authCode = rootState.auth.code;
+        let source: QuerySource;
+
+        if (state.settings.source.selected == "all") {
+            source = { type: "all" };
+        } else if (state.settings.source.selected == "user") {
+            source = { type: "all"};
+        } else {
+            source = {
+                type: "playlists",
+                playlistIds: state.settings.source.playlists.map(p => p.id)
+            };
+        }
+
+        loadTracksFromSource(authCode, source, undefined).then(results => {
+            commit("setQueryResults", results);
+        }).catch(err => {
+            commit("setQueryError", err.message);
+        }).finally(() => {
+            commit("finishQueryExecution");
+        });
+    }
 };
 
 const mutations = {
@@ -126,6 +159,25 @@ const mutations = {
     },
     setResultItems(store: QueryState, items: ResultItem[]) {
         store.results.items = items;
+    },
+    startQueryExecution(store: QueryState) {
+        store.executing = true;
+        store.error = undefined;
+    },
+    finishQueryExecution(store: QueryState) {
+        store.executing = false;
+    },
+    setQueryError(store: QueryState, error: string) {
+        store.error = error;
+    },
+    setQueryResults(store: QueryState, results: SpotifyApi.TrackObjectFull[]) {
+        store.results.items = results.map(track => {
+            return {
+                selected: true,
+                track
+            };
+        });
+        store.display = "results";
     }
 };
 

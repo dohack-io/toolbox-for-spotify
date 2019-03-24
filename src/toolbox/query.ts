@@ -4,7 +4,7 @@ import * as _ from "lodash";
 
 const spotitfy = new Spotify();
 
-type QuerySource = {
+export type QuerySource = {
     type: "all"
 } | {
     type: "playlists",
@@ -15,13 +15,13 @@ type QuerySource = {
 
 
 
-type QueryFilter = MatchArtistCondition | MatchYearCondition;
+export type QueryFilter = MatchArtistCondition | MatchYearCondition;
 
 interface QueryResult {
     foo: "test";
 }
 
-export function loadTracksFromSource(accessCode: string, source: QuerySource, filterHint: QueryFilter): Promise<SpotifyApi.TrackObjectFull[]> {
+export function loadTracksFromSource(accessCode: string, source: QuerySource, filterHint: QueryFilter|undefined): Promise<SpotifyApi.TrackObjectFull[]> {
     const spotify = new SpotifyWebApi();
     spotify.setAccessToken(accessCode);
 

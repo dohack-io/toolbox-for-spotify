@@ -1,27 +1,30 @@
 <template>
   <div class="container">
     <template v-if="display == 'settings'">
-      <query-settings />
+      <query-settings/>
       <div class="row">
         <div class="col">
           <b-button
             class="float-right mt-3"
-            variant="info"
-            disabled="!canExecuteQuery"
-            @click="display = 'results'"
-            >Show Results <i class="fas fa-arrow-alt-circle-right ml-2"></i
-          ></b-button>
+            variant="success"
+            @click="executeQuery()"
+          >
+            Show Results
+            <i class="fas fa-arrow-alt-circle-right ml-2"></i>
+          </b-button>
         </div>
+                  Exevuting: {{ executing }}
+          Error: {{ error }}
       </div>
     </template>
     <template v-if="display == 'results'">
-      <query-results />
+      <query-results/>
       <div class="row">
         <div class="col">
-          <b-button class="mt-3" variant="info" @click="display = 'settings'"
-            ><i class="fas fa-arrow-alt-circle-left mr-2"></i> Edit
-            Query</b-button
-          >
+          <b-button class="mt-3" variant="info" @click="display = 'settings'">
+            <i class="fas fa-arrow-alt-circle-left mr-2"></i> Edit
+            Query
+          </b-button>
         </div>
       </div>
     </template>
@@ -36,7 +39,7 @@ import QueryResults from "@/components/QueryResults.vue";
 import * as query from "../toolbox/query";
 
 import { createHelpers } from "vuex-map-fields";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 const { mapFields, mapMultiRowFields } = createHelpers({
   getterType: "query/getField",
@@ -52,8 +55,11 @@ export default Vue.extend({
     };
   },
   computed: {
-    ...mapFields(["display"]),
+    ...mapFields(["display", "executing", "error"]),
     ...mapGetters("query", ["canExecuteQuery"])
+  },
+  methods: {
+    ...mapActions("query", ["executeQuery"])
   }
 });
 </script>
