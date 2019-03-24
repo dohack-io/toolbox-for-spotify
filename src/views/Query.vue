@@ -1,7 +1,18 @@
 <template>
   <div class="container">
+    <div class="row">
+      <div class="col">
+        <b-alert
+          class="mt-3"
+          variant="danger"
+          dismissible
+          :show="error !== undefined"
+          @dismissed="resetError()"
+        >Unexpected errror: {{ error }}</b-alert>
+      </div>
+    </div>
     <template v-if="display == 'settings'">
-      <query-settings />
+      <query-settings/>
       <div class="row">
         <div class="col">
           <b-button
@@ -17,14 +28,10 @@
       </div>
     </template>
     <template v-if="display == 'results'">
-      <query-results />
+      <query-results/>
       <div class="row">
         <div class="col">
-          <b-button
-            class="mt-3"
-            variant="secondary"
-            @click="display = 'settings'"
-          >
+          <b-button class="mt-3" variant="secondary" @click="display = 'settings'">
             <i class="fas fa-arrow-alt-circle-left mr-2"></i> Edit Query
           </b-button>
           <b-button
@@ -40,14 +47,10 @@
       </div>
     </template>
     <template v-if="display == 'save'">
-      <song-destination />
+      <song-destination/>
       <div class="row">
         <div class="col">
-          <b-button
-            class="mt-3"
-            variant="secondary"
-            @click="display = 'results'"
-          >
+          <b-button class="mt-3" variant="secondary" @click="display = 'results'">
             <i class="fas fa-arrow-alt-circle-left mr-2"></i> Edit Results
           </b-button>
         </div>
@@ -90,7 +93,11 @@ export default Vue.extend({
     }
   },
   methods: {
-    ...mapActions("query", ["executeQuery", "executeSelectResults"])
+    ...mapActions("query", [
+      "executeQuery",
+      "executeSelectResults",
+      "resetError"
+    ])
   }
 });
 </script>

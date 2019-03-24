@@ -286,6 +286,9 @@ const actions = {
                 commit("finishExecution");
             });
     },
+    resetError({ commit }: ActionContext<QueryState, any>) {
+        commit("setExecutionError", undefined);
+    }
 };
 
 const mutations = {
