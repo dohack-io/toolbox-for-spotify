@@ -15,6 +15,8 @@ For fine tuning single songs can be removed from the results.
 
 Finally the songs can be saved to your own library, a new playlist or any of your existing playlists. Have fun! :)
 
+Test live at: https://dohack.tobi.re/
+
 ## Project setup
 ```
 npm install
