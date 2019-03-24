@@ -5,7 +5,7 @@
 
       <b-list-group>
         <b-list-group-item>
-          <div class="row">
+          <div v-if="items.length > 0" class="row">
             <div class="col-1 text-center p-0">
               <b-form-checkbox
                 :checked="selectedSongs === items.length"
@@ -13,6 +13,11 @@
               ></b-form-checkbox>
             </div>
             <div class="col-11 p-0">{{ selectedSongs }} Songs selected</div>
+          </div>
+          <div v-if="items.length == 0" class="row">
+            <div class="col">
+              No results found
+            </div>
           </div>
         </b-list-group-item>
 
