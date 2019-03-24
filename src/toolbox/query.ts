@@ -82,5 +82,5 @@ export function loadTracksFromSource(accessCode: string, source: QuerySource, fi
     }
 
     // all
-    return Promise.resolve([]);
+    return Promise.reject(new Error("Querying all of spotify is not implemented yet :)"));
 }
