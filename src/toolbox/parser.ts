@@ -18,7 +18,6 @@ const quotedString = P.seq(P.string("\""), P.takeWhile((c) => c != "\""), P.stri
 const ops = {
     equals: P.string("="),
 }
-
 function makeBinOp<T>(field: P.Parser<any>, op: P.Parser<any>, value: P.Parser<T>, producer: (value: T) => ConditionExpression) {
     return P.seq(field, P.optWhitespace, op, P.optWhitespace, value)
         .map(([, , , , v]) => {
