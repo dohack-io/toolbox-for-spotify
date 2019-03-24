@@ -13,7 +13,6 @@
             variant="info"
             @click="switchFilterMode()"
             class="float-right"
-            :disabled="true"
           >
             <i class="fas fa-random mr-2"></i>
             <span v-if="selected === 'simple'">Complex mode</span>
