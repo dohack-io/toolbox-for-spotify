@@ -1,5 +1,7 @@
 # Toolbox for Spotify
 
+Result of https://2019.dohack.io/js. For an actively developed version see https://github.com/jannikw/toolbox-for-spotify.
+
 This is a web app that allows some management of spotify playlists.
 All processing is performed 100% on client-side, there is no backend besides the spotify web api itself.
 First authenticate with your spotify account so the web app has an api token and all the required permissions.
